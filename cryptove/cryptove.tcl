@@ -1,0 +1,15 @@
+
+load [file join [file dirname [info script]] lib/libcrypto.so]
+source [file join [file dirname [info script]] cipher/cipher_api.tcl]
+source [file join [file dirname [info script]] hash/hash_api.tcl]
+source [file join [file dirname [info script]] mac/hmac_api.tcl]
+source [file join [file dirname [info script]] mac/cbc_mac.tcl]
+source [file join [file dirname [info script]] crc/crc16.tcl]
+source [file join [file dirname [info script]] rng/rng.tcl]
+source [file join [file dirname [info script]] pk/rsa.tcl]
+source [file join [file dirname [info script]] pk/sm2.tcl]
+source [file join [file dirname [info script]] pk/ecc.tcl]
+source [file join [file dirname [info script]] pk/pkcs1.tcl]
+source [file join [file dirname [info script]] common/common.tcl]
+source [file join [file dirname [info script]] common/util.tcl]
+

@@ -1,3 +1,4 @@
+#!/usr/bin/tclsh
 #===============================================================================
 # main test case for TCL
 #
@@ -17,44 +18,137 @@ source [file join [file dirname [info script]] ./test_crc.tcl]
 source [file join [file dirname [info script]] ./test_pk.tcl]
 
 
-##cipher testing
-test_aes_ecb
-test_aes_cbc
-test_aes_cfb
-test_aes_ofb
-test_aes_ctr
-test_aes_xts
-test_des_ecb
-test_des_cbc
-test_des3_ecb
-test_des3_cbc
-test_sm4_ecb
-test_sm4_cbc
+proc test_case { algo } {
+	switch $algo {
+		AES {
+			test_aes_ecb
+			test_aes_cbc
+			test_aes_cfb
+			test_aes_ofb
+			test_aes_ctr
+			test_aes_xts
+		}
+		DES {
+			test_des_ecb
+			test_des_cbc
+			test_des3_ecb
+			test_des3_cbc
+		}
+		SM4 {
+			test_sm4_ecb
+			test_sm4_cbc
+		}
+		HASH {
+			test_hash_md5
+			test_hash_sha1
+			test_hash_sha224
+			test_hash_sha256
+			test_hash_sha384
+			test_hash_sha512
+			test_hash_sm3
+		}
+		HMAC {
+			test_hmac_md5
+			test_hmac_sha1
+			test_hmac_sha224
+			test_hmac_sha256
+			test_hmac_sha384
+			test_hmac_sha512
+		}
+		CMAC {
+			test_cmac
+			test_cbcmac
+			test_xcbcmac
+		}
+		CRC {
+			test_crc16
+		}
+		RSA {
+			test_rsa
+		}
+		SM2 {
+			test_sm2
+		}
+		ECC {
+			test_ecc
+		}
+		PKCS1 {
+			test_pkcs1
+		}
+	}
+}
 
-##hash test
-test_hash_md5
-test_hash_sha1
-test_hash_sha224
-test_hash_sha256
-test_hash_sha384
-test_hash_sha512
-test_hash_sm3
-#
-##mac test
-test_hmac_md5
-test_hmac_sha1
-test_hmac_sha224
-test_hmac_sha256
-test_hmac_sha384
-test_hmac_sha512
-test_cmac
-test_cbcmac
-test_xcbcmac
+proc main_test {} {
+	while {1} {
+		puts "==================================================="
+		puts "# CryptoVe algorithm test case: #"
+		puts  {1 - AES algorithm test cases.}
+		puts  {2 - DES algorithm test cases.}
+		puts  {3 - SM4 algorithm test cases.}
+		puts  {4 - HASH algorithm test cases.}
+		puts  {5 - HMAC algorithm test cases.}
+		puts  {6 - CMAC algorithm test cases.}
+		puts  {7 - CRC algorithm test cases.}
+		puts  {8 - RSA algorithm test cases.}
+		puts  {9 - SM2 algorithm test cases.}
+		puts  {10 - ECC algorithm test cases.}
+		puts  {11 - PKCS1 algorithm test cases.}
+		puts  {12 - ALL algorithms test cases.}
+		puts  {0 - exit.}
+		puts "==================================================="
+		puts "select the test case:"
+		gets stdin sel
+		switch $sel {
+			0 {return}
+			1 {
+				test_case AES
+			}
+			2 {
+				test_case DES
+			}
+			3 {
+				test_case SM4
+			}
+			4 {
+				test_case HASH
+			}
+			5 {
+				test_case HMAC
+			}
+			6 {
+				test_case CMAC
+			}
+			7 {
+				test_case CRC
+			}
+			8 {
+				test_case RSA
+			}
+			9 {
+				test_case SM2
+			}
+			10 {
+				test_case ECC
+			}
+			11 {
+				test_case PKCS1
+			}
+			12 {
+				test_case AES
+				test_case DES
+				test_case SM4
+				test_case HASH
+				test_case HMAC
+				test_case CMAC
+				test_case CRC
+				test_case RSA
+				test_case SM2
+				test_case ECC
+				test_case PKCS1
+			}
+			default {continue}
+		}
+	}
+}
 
-##crc test
-test_crc16
-
-## pk testing 
-test_rsa
-test_sm2
-
+main_test

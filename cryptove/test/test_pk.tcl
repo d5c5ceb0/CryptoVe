@@ -351,11 +351,302 @@ puts "extkey end!"
 	puts "encdec end!"
 }
 
-proc test_ecc {} {
+set ecc_test_data {
+	secp160k1 {
+		prikey    202158741ABE6B5BCB9BF5648D8288A11343ABE2
+		pubkey    1161706E49EE70E33A8C62C449ED098AB8CA93D3E6205A1AE3F9D37A5FCA463C644B55A4F9C29244
+		signature F311960D0A6FEC9E324F7FF162C1AB273C234D0CF24F420D3A08C2529E2C9FD97B70E553ED15F9A7
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp160r1 {
+		prikey    202158741ABE6B5BCB9BF5648D8288A11343ABE2
+		pubkey    78BB18FE051B7B6AAFBDF8EFAF12C0A566C38390469EA0D821485E40A715F19B8EAD1534B97356B4
+		signature 236DC0F04D1E32D2FAC93E83F7A27D0B4EAE3A243869D858E201AF3AD15E520EE8F901E86E90759D
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp160r2 {
+		prikey    202158741ABE6B5BCB9BF5648D8288A11343ABE2
+		pubkey    7B851F2EE675F9B9B74649DFD1B55CB47E8CA2A93B6D475028871176D2203407088077A428CC9270
+		signature DB3626402745F8415F9C179C532ADD209DF47FF434BF4B196BACB58AA22B4BBC849E5B0F57B5AB67
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp192k1 {
+		prikey    202158741ABE6B5BCB9BF5648D8288A1E5318D5E1343ABE2
+		pubkey    FDA8AC008FBEFE33A0AD17D2755DAFD1B53265125F95A66ABB7B06575CFC177C66AF68F09FBE6127A707E4A1AD78B03F
+		signature 9D0F46AD0AB8A3AF9F7CDFBB371D11DA32918AB083C36B6AE943FFD125C728A325CECA9A36479FFE9D9E4C13061D22DC
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp192r1 {
+		prikey    202158741ABE6B5BCB9BF5648D8288A1E5318D5E1343ABE2
+		pubkey    F302235F15B8C4B7A2C646B0BBA426D985BFBF0A749873E8971B5A676FFE80F1DAC1FB4CA7102B460A6E791ED950D4EC
+		signature BB124CA203400840506A4A3078360A954B3DBFC461176DC7DF63F69CC442B49D4747AE55FF2013191ECCC05B929EAA53
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp224k1 {
+		prikey    5d49b3d21766bb40bbb7dc30a879ba9e4384e8ae7f65b9710b33e3de
+		pubkey    440BBFFDB176B6F829D207CA2983C7BB44746F10F31374CC75529487ABE68E35865BB285FF387E4983B54082527C69EED875AF4D25B21253
+		signature F2A29C3ACD984C942B0D9958E902CD0A4BB3BDA3FAC199EF6865F5C25C409E0D1E13950F22519836FD58128015D41D700FAB692DC9BD8E58
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp224r1 {
+		prikey    5d49b3d21766bb40bbb7dc30a879ba9e4384e8ae7f65b9710b33e3de
+		pubkey    e001c6b5be3874d5ee8d114a356c948ed6c4329a48c1b5e58be83c53c47e3dee35de593e2ea94c757bd91701e892b1f185190b364e852ef1
+		signature a529b7786b6dceecaf38cf2abeb5d6e695c8f9a63329fa00d4c195b6e9def5561a6039a94f45d60354d7272f4900835c439603d98108631c
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp256k1 {
+		prikey    3449ff64bc7e1e67f7d5e26e8574cf5ead005675f1324537426d4aa7f4d4bf0f
+		pubkey    23D23D2F0227E45FAB5F1528A3522450E501894375B7E854EB26740A8901E949B81BB726B5C234E3FD0F293ACD2F3D094F3940D05E7B1008F2178C6489806413
+		signature 3B1263550B017E64A061F7A8E6C0B52E5AD219CE261D669A9B06A5C875EC986E4D1DF341D1E4144BE7396B911A9946089D37BCAC8D1E17E41646DAAA5A582C19
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp256r1 {
+		prikey    595b41ddb284b6ad945f3845f29b3cf05fc1446b44573760723528c19b318663
+		pubkey    bab4b4074649a187d429369d879752c9bdb14ba92cefd775aa36cb7661748b4f03a35ef901c8954e20f02d46652058c6e306494773b2f1a4220acb1f2b3865e6
+		signature 5b066e018db90c071e321b0959e9420a960eec5b86392b2fc0ea0610d60de8bd45e6f16b77999b64bb71bf7d9c21f6cc7bcf0c73c78063b07a43d2607611e896
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp384r1 {
+		prikey    1644afdb5ddde5090eb1e427fd57f5672ce33f18e82faf71da036975263efc3fcff6764703c70e25f845b40f50359cf7
+		pubkey    65b44a89c45b95a75c28259e054bd01e03d1a419947c3c9c980f109df5f636516a8d1607f1825c6063b751d4ec03da28be862583362b9fb13b6e6b11aa239bcc8f3e688968f30103bbd231f397ff4af3252be82ac0a32dc4847067854c30798f
+		signature 4e5853680efaa1dd9eee051607ad324724cb6122b37941a0f94b853cd53deec5728afbd1af6c0d60985069384efacd73e7c1646f080419bc8bd05d357e419d2374e22e25887e0a159b9ed908b9e332b4d463bc9a6d4fd3c70557464571b2f36c
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+	secp521r1 {
+		prikey    000001c1964a8683a308751c9f0653e5fb2aba8476643f5078b5af7798b937043ec6ed3ced86969b6bea4d411de0b844766f6a2e6787e47831918a30ae66f518fbd854a7
+		pubkey    0000002a9d94a9fe2661893d486be9ccb1df1ebf6f11d0ccf9469078621a046c1f8311403068717df3eace0f25505633189943ac4bbbd9227d8d53850a050048a01b49350000003f1e7334c78ff65c0e873eb8fcdeb04394c5af6979d44866ded4a3074c284c7be3a7c729778f9c270cf58ea4a69ae7e662c80fc8c920c0f57b1087c683f116cce7
+		signature 00000142700dfcd62fb7e3eef70a4ee5d27cdad47cd05fc21d52e6f50602b0fa9b0cb0cf1aa702b274a52d87c7c39b0a971887b9fca8bbbafcd8d07e507d37bd0d1bd38a000001be42328c10b30dce0eadaab2e6d2fd5ee293bd7c2dcf6c59baf5df4cb28a93244491621b810d30132f6275a447b216f19ed54b9a1fb8652a5c68ac3381e2874203
+		mhash     a9993e364706816aba3e25717850c26c9cd0d89d
+	}
+}
 
+proc ecdsa_test_once {curve times} {
+	global ecc_test_data
+	set prikey     [dict get [dict get $ecc_test_data $curve] prikey]
+	set pubkey     [dict get [dict get $ecc_test_data $curve] pubkey]
+	set signature  [dict get [dict get $ecc_test_data $curve] signature]
+	set mhash      [dict get [dict get $ecc_test_data $curve] mhash]
+
+	#verify
+	set res [ecc_verify $curve $pubkey $signature $mhash]
+	puts $res
+	if {$res != 0} {
+		puts $res
+		return -code error "ecc_verify $curve error!"
+	}
+	puts "ecc_verify $curve success"
+	#sign
+	set sklen [expr [string length $prikey]/2]
+	for {set i 0} {$i < $times} {incr i } {
+		set random 00000000[rand [expr $sklen-4] 0 256]
+		set RS [ecc_sign $curve $random $prikey $mhash]
+		puts $RS
+		set R [lindex $RS 0]
+		set S [lindex $RS 1]
+		puts $R
+		puts $S
+		set res [ecc_verify $curve $pubkey ${R}${S} $mhash]
+		puts $res
+		if {$res != 0} {
+			puts $res
+			return -code error "ecc_sign $curve error!"
+		}
+	}
+	puts "ecc_sign $curve success"
+}
+
+proc ecdsa_test {times} {
+
+	#secp160k1
+	ecdsa_test_once secp160k1 $times
+	#secp160r1
+	ecdsa_test_once secp160r1 $times
+	#secp160r2
+	ecdsa_test_once secp160r2 $times
+	#secp192k1
+	ecdsa_test_once secp192k1 $times
+	#secp192r1
+	ecdsa_test_once secp192r1 $times
+	#secp224k1
+	ecdsa_test_once secp224k1 $times
+	#secp224r1
+	ecdsa_test_once secp224r1 $times
+	#secp256k1
+	ecdsa_test_once secp256k1 $times
+	#secp256r1
+	ecdsa_test_once secp256r1 $times
+	#secp384r1
+	ecdsa_test_once secp384r1 $times
+	#secp521r1
+	ecdsa_test_once secp521r1 $times
+}
+
+proc eckeygen_test_once {curve times} {
+	global ecc_test_data
+
+	set mhash      [dict get [dict get $ecc_test_data $curve] mhash]
+
+	for {set i 0} {$i < $times} {incr i} {
+		set ec_key [ecc_keygen $curve]
+		puts $ec_key
+		set prikey [lindex $ec_key 0]
+		set pubkey [lindex $ec_key 1]
+
+		#get pubkey from prikey
+		set tempkey [ecc_keygen_sk $curve $prikey]	
+		set temppubkey [lindex $tempkey 1]
+		if {[cmp $temppubkey $pubkey]} {
+			puts $temppubkey
+			puts $pubkey
+			return -code error "ecc_keygen_st $curve error!"
+		}
+
+		#sign
+		set sklen [expr [string length $prikey]/2]
+		set random 00000000[rand [expr $sklen-4] 0 256]
+		set RS [ecc_sign $curve $random $prikey $mhash]
+		puts $RS
+		set R [lindex $RS 0]
+		set S [lindex $RS 1]
+		puts $R
+		puts $S
+		#verify
+		set res [ecc_verify $curve $pubkey ${R}${S} $mhash]
+		puts $res
+		if {$res != 0} {
+			puts $res
+			return -code error "ecc_keygen $curve error!"
+		}
+	}
+	puts "ecc_keygen $curve success"
 }
 
 
+proc eckeygen_test {times} {
+	#secp160k1
+	eckeygen_test_once secp160k1 $times
+	#secp160r1
+	eckeygen_test_once secp160r1 $times
+	#secp160r2
+	eckeygen_test_once secp160r2 $times
+	#secp192k1
+	eckeygen_test_once secp192k1 $times
+	#secp192r1
+	eckeygen_test_once secp192r1 $times
+	#secp224k1
+	eckeygen_test_once secp224k1 $times
+	#secp224r1
+	eckeygen_test_once secp224r1 $times
+	#secp256k1
+	eckeygen_test_once secp256k1 $times
+	#secp256r1
+	eckeygen_test_once secp256r1 $times
+	#secp384r1
+	eckeygen_test_once secp384r1 $times
+	#secp521r1
+	eckeygen_test_once secp521r1 $times
+}
+
+proc ecdh_test_once {curve times} {
+	global ecc_curve_list
+	global ecc_test_data
+
+	set prikey     [dict get [dict get $ecc_test_data $curve] prikey]
+	set pubkey     [dict get [dict get $ecc_test_data $curve] pubkey]
+
+	set gx [dict get [dict get $ecc_curve_list $curve] ecc_gx]
+	set gy [dict get [dict get $ecc_curve_list $curve] ecc_gy]
+
+	set xlen [expr [string length $gx]/2]
+
+	set pubkx   [ecc_dh $curve $prikey ${gx}${gy}]
+	set pubkeyx [string range $pubkey 0 [expr $xlen*2-1]]
+	puts $pubkx
+	puts $pubkeyx
+
+	if {[cmp $pubkx $pubkeyx]} {
+		puts $pubkx
+		puts $pubkeyx
+		return -code error "ecc_dh $curve test fail"
+	}
+	
+	for {set i 0} {$i < $times} {incr i} {
+		set keyA [ecc_keygen $curve]
+		set prikeyA [lindex $keyA 0]
+		set pubkeyA [lindex $keyA 1]
+
+		set keyB [ecc_keygen $curve]
+		set prikeyB [lindex $keyB 0]
+		set pubkeyB [lindex $keyB 1]
+
+		set sharedKeyA [ecc_dh $curve $prikeyA $pubkeyB]
+		set sharedKeyB [ecc_dh $curve $prikeyB $pubkeyA]
+		puts $sharedKeyA
+		puts $sharedKeyB
+		if {[cmp $sharedKeyA $sharedKeyB]} {
+			puts $sharedKeyA
+			puts $sharedKeyB
+			return -code error "ecc_dh $curve loop test fail"
+		}
+	}
+
+	puts "ecc_dh $curve test pass"
+}
+
+proc ecdh_test {times} {
+	#secp160k1
+	ecdh_test_once secp160k1 $times
+	#secp160r1
+	ecdh_test_once secp160r1 $times
+	#secp160r2
+	ecdh_test_once secp160r2 $times
+	#secp192k1
+	ecdh_test_once secp192k1 $times
+	#secp192r1
+	ecdh_test_once secp192r1 $times
+	#secp224k1
+	ecdh_test_once secp224k1 $times
+	#secp224r1
+	ecdh_test_once secp224r1 $times
+	#secp256k1
+	ecdh_test_once secp256k1 $times
+	#secp256r1
+	ecdh_test_once secp256r1 $times
+	#secp384r1
+	ecdh_test_once secp384r1 $times
+	#secp521r1
+	ecdh_test_once secp521r1 $times
+}
+
+set LOOP_TIMES 10000
+
+proc test_ecc {{algo ALL}} {
+	global LOOP_TIMES
+	switch $algo {
+		"ECDSA" { 
+			ecdsa_test $LOOP_TIMES
+		}
+		"KEYGEN" {
+			eckeygen_test $LOOP_TIMES
+		}
+		"ECDH"  {
+			ecdh_test $LOOP_TIMES
+		}
+		"ALL" {
+			ecdsa_test $LOOP_TIMES
+			eckeygen_test $LOOP_TIMES
+			ecdh_test $LOOP_TIMES
+		}
+	}
+}
+
 
 proc test_pkcs1 {} {
+	set n a0f855d8194eb182cd8f435805ce75524b2c7fdfdb2d7a82a5288112a42ebb5decf87648d09131f4ad38e7a31d028c69ca5c8516792e2bf3477a1a7e9813efd4d11996bbe56195f40e06036a27e902137c7e80dddb0e2856b722e302c9d21df3ed30dfa8fb849c8c86ae9d71fdea7d47f8535b34b381b33c4b1e4d0095807a5d628fc01984d28d7427712a16e3cf871bfc5cf901865067e2d5847d32822c75b4bc94abb2f0e624918af766bbd8a1c60691445f810748f766ac1105db97335cc0a6802e08800e2e7ef8a04bad3e1e3f90525d08a9a4f2e40f7f32a0646861b531662b3af7026b82e35588891e063bc171ba242e6bbb6873fece2f1e85d92e0d1b
+	set d  9a076765643a07e3e93cf82ce7497abc2750ca7ff363de41db3619e43394c0178d64e7129ff8ffbb6871f63cffca6b7fe3728aab4983a3eca3edb42284f536de06c41c976953eac06116e1f7977f004c93291db8ad1f2bfc663b8ccc2340db068965e5eef5d61c52dfa180e90e166e910a8f00cc3a2496d4cff08bb04e5e653727bcdc788c24c5041cc0713c6b51cee6f2b82abc223d252746f5a373d94b1803d2740049312fb96c64260aa7eeec95e29e7cafd00975544de5502044069753c9573919cd2d92880f50bd2e368bad093ed060bbed6825c2c3abf4d82a934138b000028ecadf7ab15a02be5a90200ca6e40628ad1b10214571d405ec7ba6969321
+	set e 010001
+	set msg ec174729c4f5c570ba0de4c424cdcbf0362a7718039464
+
+	set s 17e483781695067a25bc7cb204429a8754af36032038460e1938c28cd058025b14d2cffe5d3da39e766542014e5419f1d4c4d7d8e3ebcd2221dde04d24bbbad657f6782b7a0fada3c3ea595bc21054b0abd1eb1ada86276ed31dbcce58be7407cbbb924d595fbf44f2bb6e3eab92296076e291439107e67912b4fac3a27ff84af7cd2db1385a8340b2e49c7c2ec96a6b657a1641da80799cb88734cca35a2b3a2c4af832a34ac8d3134ccc8b61150dc1b64391888a3a84bdb5184b48e8509e8ba726ba8847e4ca0640ce615e3adf5248ce08adb6484f6f29caf6c65308ec6351d97369ae005a7c762f76f0ddc0becc3e45529aa9c8391473e392c9a60c2d0834
+	puts [rsa_verify_pss sha1 $e $n $s $msg]
 }

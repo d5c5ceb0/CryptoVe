@@ -24,7 +24,10 @@
 
 source [file join [file dirname [info script]] ../cryptove.tcl]
 
+set MSG_LENGTH_MAX 256 
+
 proc test_aes_ecb {} {
+	global MSG_LENGTH_MAX
 	set k(128) 2b7e151628aed2a6abf7158809cf4f3c
 	set m(128) 6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710
 	set c(128) 3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4
@@ -54,7 +57,7 @@ proc test_aes_ecb {} {
 	set block_len 16
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set m2 [rand $i 0 256]
 			set c1 [aes_ecb_process enc $k2 $m2]
@@ -70,7 +73,7 @@ proc test_aes_ecb {} {
 	}
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i < 1024} {incr i $block_len} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set m2 [rand $i 0 256]
 			set c1 ""
@@ -96,6 +99,7 @@ proc test_aes_ecb {} {
 
 
 proc test_aes_cbc {} {
+	global MSG_LENGTH_MAX
 	set k(128) 2b7e151628aed2a6abf7158809cf4f3c
 	set iv(128) 000102030405060708090a0b0c0d0e0f
 	set m(128) 6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710
@@ -128,7 +132,7 @@ proc test_aes_cbc {} {
 	set block_len 16
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -145,7 +149,7 @@ proc test_aes_cbc {} {
 	}
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i < 1024} {incr i $block_len} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -172,6 +176,7 @@ proc test_aes_cbc {} {
 
 
 proc test_aes_cfb {} {
+	global MSG_LENGTH_MAX
 	set k(128) 2b7e151628aed2a6abf7158809cf4f3c
 	set iv(128) 000102030405060708090a0b0c0d0e0f
 	set m(128) 6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710
@@ -204,7 +209,7 @@ proc test_aes_cfb {} {
 	set block_len 16
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -221,7 +226,7 @@ proc test_aes_cfb {} {
 	}
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i < 1024} {incr i $block_len} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -248,6 +253,7 @@ proc test_aes_cfb {} {
 
 
 proc test_aes_ofb {} {
+	global MSG_LENGTH_MAX
 	set k(128) 2b7e151628aed2a6abf7158809cf4f3c
 	set iv(128) 000102030405060708090a0b0c0d0e0f
 	set m(128) 6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710
@@ -280,7 +286,7 @@ proc test_aes_ofb {} {
 	set block_len 16
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -297,7 +303,7 @@ proc test_aes_ofb {} {
 	}
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i < 1024} {incr i $block_len} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -323,6 +329,7 @@ proc test_aes_ofb {} {
 }
 
 proc test_aes_ctr {} {
+	global MSG_LENGTH_MAX
 	set k(128) 2b7e151628aed2a6abf7158809cf4f3c
 	set iv(128) f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
 	set m(128) 6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710
@@ -355,7 +362,7 @@ proc test_aes_ctr {} {
 	set block_len 16
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -372,7 +379,7 @@ proc test_aes_ctr {} {
 	}
 
 	foreach klen {128 192 256} {
-		for {set i $block_len} {$i < 1024} {incr i $block_len} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -399,6 +406,7 @@ proc test_aes_ctr {} {
 
 
 proc test_aes_xts {} {
+	global MSG_LENGTH_MAX
 	set k(128) fffefdfcfbfaf9f8f7f6f5f4f3f2f1f022222222222222222222222222222222 
 	set iv(128) 33333333330000000000000000000000
 	set m(128) 4444444444444444444444444444444444444444444444444444444444444444
@@ -431,7 +439,7 @@ proc test_aes_xts {} {
 	set block_len 16
 
 	foreach klen {128 256} {
-		for {set i $block_len} {$i <= 1024} {incr i 1} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i 1} {
 			set k2 [rand [expr $klen/8 * 2] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -447,7 +455,7 @@ proc test_aes_xts {} {
 	}
 
 	foreach klen {128 256} {
-		for {set i $block_len} {$i < 1024} {incr i 1} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i 1} {
 			set k2 [rand [expr $klen/8 * 2] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -475,6 +483,7 @@ proc test_aes_xts {} {
 }
 
 proc test_des_ecb {} {
+	global MSG_LENGTH_MAX
 	#set k
 	#set m
 	#set c
@@ -495,7 +504,7 @@ proc test_des_ecb {} {
 
 	set block_len 8
 
-	for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+	for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 8 0 256]
 		set m2 [rand $i 0 256]
 		set c1 [des_ecb_process enc $k2 $m2]
@@ -509,7 +518,7 @@ proc test_des_ecb {} {
 	}
 	puts "des_ecb_process pass!"
 
-	for {set i $block_len} {$i < 1024} {incr i $block_len} {
+	for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 8 0 256]
 		set m2 [rand $i 0 256]
 		set c1 ""
@@ -534,6 +543,7 @@ proc test_des_ecb {} {
 
 
 proc test_des_cbc {} {
+	global MSG_LENGTH_MAX
 	#set k
 	#set iv
 	#set m
@@ -555,7 +565,7 @@ proc test_des_cbc {} {
 
 	set block_len 8
 
-	for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+	for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 8 0 256]
 		set iv2 [rand $block_len 0 256]
 		set m2 [rand $i 0 256]
@@ -570,7 +580,7 @@ proc test_des_cbc {} {
 	}
 	puts "des_cbc_process pass!"
 
-	for {set i $block_len} {$i < 1024} {incr i $block_len} {
+	for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 8 0 256]
 		set iv2 [rand $block_len 0 256]
 		set m2 [rand $i 0 256]
@@ -595,6 +605,7 @@ proc test_des_cbc {} {
 }
 
 proc test_des3_ecb {} {
+	global MSG_LENGTH_MAX
 	#set k(128) 
 	#set m(128) 
 	#set c(128) 
@@ -621,7 +632,7 @@ proc test_des3_ecb {} {
 	set block_len 8
 
 	foreach klen {128 192} {
-		for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set m2 [rand $i 0 256]
 			set c1 [des3_ecb_process enc $k2 $m2]
@@ -637,7 +648,7 @@ proc test_des3_ecb {} {
 	}
 
 	foreach klen {128 192} {
-		for {set i $block_len} {$i < 1024} {incr i $block_len} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set m2 [rand $i 0 256]
 			set c1 ""
@@ -663,6 +674,7 @@ proc test_des3_ecb {} {
 
 
 proc test_des3_cbc {} {
+	global MSG_LENGTH_MAX
 	#set k(128) 
 	#set iv(128)
 	#set m(128) 
@@ -691,7 +703,7 @@ proc test_des3_cbc {} {
 	set block_len 8
 
 	foreach klen {128 192} {
-		for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+		for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -708,7 +720,7 @@ proc test_des3_cbc {} {
 	}
 
 	foreach klen {128 192} {
-		for {set i $block_len} {$i < 1024} {incr i $block_len} {
+		for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 			set k2 [rand [expr $klen/8] 0 256]
 			set iv2 [rand $block_len 0 256]
 			set m2 [rand $i 0 256]
@@ -734,6 +746,7 @@ proc test_des3_cbc {} {
 }
 
 proc test_sm4_ecb {} {
+	global MSG_LENGTH_MAX
 	#set k
 	#set m
 	#set c
@@ -754,7 +767,7 @@ proc test_sm4_ecb {} {
 
 	set block_len 16
 
-	for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+	for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 16 0 256]
 		set m2 [rand $i 0 256]
 		set c1 [sm4_ecb_process enc $k2 $m2]
@@ -768,7 +781,7 @@ proc test_sm4_ecb {} {
 	}
 	puts "sm4_ecb_process pass!"
 
-	for {set i $block_len} {$i < 1024} {incr i $block_len} {
+	for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 16 0 256]
 		set m2 [rand $i 0 256]
 		set c1 ""
@@ -793,6 +806,7 @@ proc test_sm4_ecb {} {
 
 
 proc test_sm4_cbc {} {
+	global MSG_LENGTH_MAX
 	#set k
 	#set iv
 	#set m
@@ -814,7 +828,7 @@ proc test_sm4_cbc {} {
 
 	set block_len 16
 
-	for {set i $block_len} {$i <= 1024} {incr i $block_len} {
+	for {set i $block_len} {$i <= $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 16 0 256]
 		set iv2 [rand $block_len 0 256]
 		set m2 [rand $i 0 256]
@@ -829,7 +843,7 @@ proc test_sm4_cbc {} {
 	}
 	puts "sm4_cbc_process pass!"
 
-	for {set i $block_len} {$i < 1024} {incr i $block_len} {
+	for {set i $block_len} {$i < $MSG_LENGTH_MAX} {incr i $block_len} {
 		set k2 [rand 16 0 256]
 		set iv2 [rand $block_len 0 256]
 		set m2 [rand $i 0 256]

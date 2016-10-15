@@ -16,11 +16,15 @@
 
 source [file join [file dirname [info script]] ../cryptove.tcl]
 
+
+set RSA_LOOP_TIMES 1
+
 proc test_rsa {} {
+	global RSA_LOOP_TIMES
 	set rsa_klen 256
 	for {set j 64} {$j<=$rsa_klen} {incr j 2} {
 
-		for {set i 0} {$i < 100} {incr i 1} {
+		for {set i 0} {$i < $RSA_LOOP_TIMES} {incr i 1} {
 
 			set rsa_cklen [expr 8*$j]
 			#puts rsa_${rsa_cklen}_enc_$i
@@ -494,11 +498,10 @@ proc eckeygen_test_once {curve times} {
 
 		#get pubkey from prikey
 		set tempkey [ecc_keygen_sk $curve $prikey]	
-		set temppubkey [lindex $tempkey 1]
-		if {[cmp $temppubkey $pubkey]} {
-			puts $temppubkey
-			puts $pubkey
-			return -code error "ecc_keygen_st $curve error!"
+		if {[cmp $tempkey $pubkey]} {
+			puts gen_$tempkey
+			puts std_$pubkey
+			return -code error "ecc_keygen_sk $curve error!"
 		}
 
 		#sign
@@ -618,24 +621,24 @@ proc ecdh_test {times} {
 	ecdh_test_once secp521r1 $times
 }
 
-set LOOP_TIMES 10000
 
+set ECC_LOOP_TIMES 1
 proc test_ecc {{algo ALL}} {
-	global LOOP_TIMES
+	global ECC_LOOP_TIMES
 	switch $algo {
 		"ECDSA" { 
-			ecdsa_test $LOOP_TIMES
+			ecdsa_test $ECC_LOOP_TIMES
 		}
 		"KEYGEN" {
-			eckeygen_test $LOOP_TIMES
+			eckeygen_test $ECC_LOOP_TIMES
 		}
 		"ECDH"  {
-			ecdh_test $LOOP_TIMES
+			ecdh_test $ECC_LOOP_TIMES
 		}
 		"ALL" {
-			ecdsa_test $LOOP_TIMES
-			eckeygen_test $LOOP_TIMES
-			ecdh_test $LOOP_TIMES
+			ecdsa_test $ECC_LOOP_TIMES
+			eckeygen_test $ECC_LOOP_TIMES
+			ecdh_test $ECC_LOOP_TIMES
 		}
 	}
 }

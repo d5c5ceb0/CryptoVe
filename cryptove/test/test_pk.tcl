@@ -648,5 +648,16 @@ proc test_pkcs1 {} {
 	set msg ec174729c4f5c570ba0de4c424cdcbf0362a7718039464
 
 	set s 17e483781695067a25bc7cb204429a8754af36032038460e1938c28cd058025b14d2cffe5d3da39e766542014e5419f1d4c4d7d8e3ebcd2221dde04d24bbbad657f6782b7a0fada3c3ea595bc21054b0abd1eb1ada86276ed31dbcce58be7407cbbb924d595fbf44f2bb6e3eab92296076e291439107e67912b4fac3a27ff84af7cd2db1385a8340b2e49c7c2ec96a6b657a1641da80799cb88734cca35a2b3a2c4af832a34ac8d3134ccc8b61150dc1b64391888a3a84bdb5184b48e8509e8ba726ba8847e4ca0640ce615e3adf5248ce08adb6484f6f29caf6c65308ec6351d97369ae005a7c762f76f0ddc0becc3e45529aa9c8391473e392c9a60c2d0834
-	puts [rsa_verify_pss sha1 $e $n $s $msg]
+	set salt 0102
+	if {[rsa_verify_pss sha1 $e $n $s $msg] != 00} {
+		return -code error "rsa_verify_pss error"
+	}
+	puts "pkcs1 rsa_verify_pss pass"
+    set s [rsa_sign_pss sha1 $d $n $msg $salt]
+	puts s_$s
+	if {[rsa_verify_pss sha1 $e $n $s $msg] != 00} {
+		return -code error "rsa_sign_pss error"
+	}
+	puts "pkcs1 rsa_sign_pss pass"
+
 }

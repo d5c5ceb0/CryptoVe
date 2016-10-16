@@ -1,4 +1,26 @@
+#===============================================================================
+#pkcs1 api for TCL
+#
+#pkcs1 api
+#
+#Wei Zhang <d5c5ceb0@gmail.com>   2016.06.17
+#
+#===============================================================================
+#commands
+#eme_oaep_encode 
+#eme_oaep_decode 
+#eme_pkcs1_v1_5_encode 
+#eme_pkcs1_v1_5_decode 
+#emsa_pkcs1_v1_5_encode 
+#emsa_pss_encode 
+#emsa_pss_decode
+#rsa_sign_pss
+#rsa_verify_pss
+#=============================================================================================
 
+package provide crypto 1.0.0
+
+load [file join [file dirname [info script]] ../lib/libcrypto[info sharedlibextension]]
 
 ##
 # EME_OAEP_encode

@@ -15,7 +15,7 @@
 
 package provide crypto 1.0.0
 
-load [file join [file dirname [info script]] ../lib/libcrypto.so]
+load [file join [file dirname [info script]] ../lib/libcrypto[info sharedlibextension]]
 
 proc rsa_RandomRange { min max } {  
     # 获得[0.0,1.0)之间的随机数  

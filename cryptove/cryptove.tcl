@@ -1,5 +1,5 @@
 
-load [file join [file dirname [info script]] lib/libcrypto.so]
+load [file join [file dirname [info script]] lib/libcrypto[info sharedlibextension]]
 source [file join [file dirname [info script]] cipher/cipher_api.tcl]
 source [file join [file dirname [info script]] hash/hash_api.tcl]
 source [file join [file dirname [info script]] mac/hmac_api.tcl]

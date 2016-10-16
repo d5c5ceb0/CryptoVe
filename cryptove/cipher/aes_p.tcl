@@ -11,6 +11,6 @@
 
 package provide crypto 1.0.0
 
-load [file join [file dirname [info script]] ../lib/libcrypto.so]
+load [file join [file dirname [info script]] ../lib/libcrypto[info sharedlibextension]]
 
-#aes ecb funtion in libcrypto.so
+#aes ecb funtion in libcrypto library

@@ -12,6 +12,6 @@
 
 package provide crypto 1.0.0
 
-load [file join [file dirname [info script]] ../lib/libcrypto.so]
+load [file join [file dirname [info script]] ../lib/libcrypto[info sharedlibextension]]
 
-#sm4 ecb in libcrypto.so
+#sm4 ecb in libcrypto library

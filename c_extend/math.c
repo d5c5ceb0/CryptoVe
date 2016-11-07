@@ -569,6 +569,7 @@ int IsPointInCurve(char *inParamList[], char *strOutPut)
 	big a, b, p, gx, gy;
 
 	miracl *mip = mirsys(4096, 16);
+	epoint *g =  epoint_init();
 	a=mirvar(0);
 	b=mirvar(0);
 	p=mirvar(0);
@@ -588,7 +589,6 @@ int IsPointInCurve(char *inParamList[], char *strOutPut)
 	cinstr(b, (char *)inParamList[4]);
 
 	ecurve_init(a, b, p, MR_AFFINE);
-	epoint *g =  epoint_init();
     if(epoint_set(gx,  gy,  1,  g) == TRUE)
 		strcpy(strOutPut, "01");
 	else
@@ -621,6 +621,8 @@ int EcPointAdd(char *inParamList[], char *strOutPut)
 	big a, b, p, ax, ay, bx, by;
 
 	miracl *mip = mirsys(4096, 16);
+	epoint *pa =  epoint_init();
+	epoint *pb =  epoint_init();
 	a=mirvar(0);
 	b=mirvar(0);
 	p=mirvar(0);
@@ -641,8 +643,6 @@ int EcPointAdd(char *inParamList[], char *strOutPut)
 	out_len = strlen(inParamList[4]);
 
 	ecurve_init(a, b, p, MR_AFFINE);
-	epoint *pa =  epoint_init();
-	epoint *pb =  epoint_init();
     if(epoint_set(ax,  ay,  1,  pa) != TRUE)
 	{
 		strcpy(strOutPut, "Usage: padd, Point is not in curve");
@@ -718,6 +718,8 @@ int EcPointMul(char *inParamList[], char *strOutPut)
 	big a, b, p, d, gx, gy, qx, qy;
 
 	miracl *mip = mirsys(4096, 16);
+	epoint *g =  epoint_init();
+	epoint *q =  epoint_init();
 	a=mirvar(0);
 	b=mirvar(0);
 	p=mirvar(0);
@@ -743,8 +745,6 @@ int EcPointMul(char *inParamList[], char *strOutPut)
 	out_len = strlen(inParamList[3]);
 
 	ecurve_init(a, b, p, MR_AFFINE);
-	epoint *g =  epoint_init();
-	epoint *q =  epoint_init();
     if(epoint_set(gx,  gy,  1,  g) != TRUE)
 	{
 		strcpy(strOutPut, "Usage: pmul, Point is not in curve");
@@ -808,6 +808,9 @@ int EcMultPointMul(char *inParamList[], char *strOutPut)
 	big a, b, p, d, gx, gy, da, gax, gay, qx, qy;
 
 	miracl *mip = mirsys(4096, 16);
+	epoint *g =  epoint_init();
+	epoint *ga = epoint_init();
+	epoint *q =  epoint_init();
 	a=mirvar(0);
 	b=mirvar(0);
 	p=mirvar(0);
@@ -839,9 +842,6 @@ int EcMultPointMul(char *inParamList[], char *strOutPut)
 	out_len = strlen(inParamList[6]);
 
 	ecurve_init(a, b, p, MR_AFFINE);
-	epoint *g =  epoint_init();
-	epoint *ga = epoint_init();
-	epoint *q =  epoint_init();
     if(epoint_set(gx,  gy,  1,  g) != TRUE)
 	{
 		strcpy(strOutPut, "Usage: mpmul, Point is not in curve");

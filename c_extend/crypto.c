@@ -10,6 +10,11 @@
 
 int DLLEXPORT Crypto_Init(Tcl_Interp* interp);
 
+//#define FORWINDOWS
+#ifdef FORWINDOWS
+#pragma comment(lib,"tcl85.lib")
+#endif
+
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)<(b)?(b):(a))
 

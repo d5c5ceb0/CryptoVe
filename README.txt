@@ -18,4 +18,9 @@ and run make command in a shell. Copy the libcrypto.so to cryptove/lib/.
 run tclsh, and "source cryptove.tcl" for using.
 
 for windows
-to be continue.
+
+1. use win32 version to build miralc library, and get miracl.lib.
+2. install active-tcl 8.5 ix86.
+3. using VC++ to build libcryto.dll, and copy the libcrypto.dll to cryptove/lib/
+4. run tclsh, and "source cryptove.tcl" for using.
+

@@ -16,6 +16,7 @@ source [file join [file dirname [info script]] ./test_hash.tcl]
 source [file join [file dirname [info script]] ./test_mac.tcl]
 source [file join [file dirname [info script]] ./test_crc.tcl]
 source [file join [file dirname [info script]] ./test_pk.tcl]
+source [file join [file dirname [info script]] ./test_stream.tcl]
 
 
 proc test_case { algo } {
@@ -75,6 +76,12 @@ proc test_case { algo } {
 		PKCS1 {
 			test_pkcs1
 		}
+		RC4 {
+			test_rc4
+		}
+		CHACHA20_POLY1305 {
+			test_chacha20_poly1305
+		}
 	}
 }
 
@@ -91,9 +98,11 @@ proc main_test {} {
 		puts  {7 - CRC algorithm test cases.}
 		puts  {8 - RSA algorithm test cases.}
 		puts  {9 - SM2 algorithm test cases.}
-		puts  {10 - ECC algorithm test cases.}
-		puts  {11 - PKCS1 algorithm test cases.}
-		puts  {12 - ALL algorithms test cases.}
+		puts  {a - ECC algorithm test cases.}
+		puts  {b - PKCS1 algorithm test cases.}
+		puts  {c - RC4 algorithm test cases.}
+		puts  {d - CHACHA20_POLY1305 algorithm test cases.}
+		puts  {e - ALL algorithms test cases.}
 		puts  {0 - exit.}
 		puts "==================================================="
 		puts "select the test case:"
@@ -127,13 +136,19 @@ proc main_test {} {
 			9 {
 				test_case SM2
 			}
-			10 {
+			a {
 				test_case ECC
 			}
-			11 {
+			b {
 				test_case PKCS1
 			}
-			12 {
+			c {
+				test_case RC4
+			}
+			d {
+				test_case CHACHA20_POLY1305
+			}
+			e {
 				test_case AES
 				test_case DES
 				test_case SM4
@@ -145,6 +160,8 @@ proc main_test {} {
 				test_case SM2
 				test_case ECC
 				test_case PKCS1
+				test_case RC4
+				test_case CHACHA20_POLY1305
 			}
 			default {continue}
 		}

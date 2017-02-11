@@ -113,7 +113,6 @@ void sha512_final(Hash_CTX512 *ctx, uint8 *digest);
 //a 指向数据a 的指针 b 指向数据b的指针  result 指向结果的指针 所有指针都按照小端模式指向
 void SHAADD(uint8 *a, uint8 *b, uint8 *result)
 {
-#if 1
 	uint8 tmp_a;
     uint8 tmp_sum;
     uint8 tmp_carry=0;
@@ -141,118 +140,22 @@ void SHAADD(uint8 *a, uint8 *b, uint8 *result)
     	result[i-1] = tmp_sum;
     }
 
-#else
-	uint8 i;
-	XBYTE[SXA_CTRL0] = 0x20; //set CLS 1
-	XBYTE[SXA_CTRL0] = 0x80; //set add mode 
-
-	a += 0x07; 
-	for(i=0;i<8;i++)
-	{
-		*(P_SXA_DATAA+i) = *a;
-		a--;			
-	}
-	
-	b += 0x07;
-	for(i=0;i<8;i++)
-	{
-		*(P_SXA_DATAB+i) = *b;
-		b--;
-	}
-		
-	XBYTE[SXA_CTRL0] |= 0x01;
-	while(0);
-
-	result += 0x07;
-	/*for(i=0;i<8;i++)
-	{
-		*result = *(P_SXA_RESULT+i);
-		result--;
-	}*/
-	DmaRun(0x01,0x08,(uint16)result&0xff,((uint16)result)>>8,(uint16)P_SXA_RESULT&0xff,((uint16)P_SXA_RESULT)>>8,0x08,0);	
-	//result -= 0x07;
-#endif
-		
 }
 
 
 void SHAXOR(uint8 *a, uint8 *b, uint8 *result)
 {
-#if 1
 	uint8 i;
 	for(i=0; i<8; i++)
 		result[i] = *a++ ^ *b++;
-#else
-	uint8 i;
-	XBYTE[SXA_CTRL0] = 0x20; //set CLS 1
-	XBYTE[SXA_CTRL0] = 0x40; //set xor mode 
-
-	a += 0x07; 
-	for(i=0;i<8;i++)
-	{
-		*(P_SXA_DATAA+i) = *a;
-		a--;			
-	}
-
-	b += 0x07;
-	for(i=0;i<8;i++)
-	{
-		*(P_SXA_DATAB+i) = *b;
-		b--;
-	}	
-
-	XBYTE[SXA_CTRL0] |= 0x01;
-	while(0);
-
-	result += 0x07;
-	/*for(i=0;i<8;i++)
-	{
-		*result = *(P_SXA_RESULT+i);
-		result--;
-	}*/
-	DmaRun(0x01,0x08,(uint16)result&0xff,((uint16)result)>>8,(uint16)P_SXA_RESULT&0xff,((uint16)P_SXA_RESULT)>>8,0x08,0);		
-	//result -= 0x07;
-#endif
 }
 
 
 void SHAAND(uint8 *a, uint8 *b, uint8 *result)
 {
-#if 1
 	uint8 i;
 	for(i=0; i<8; i++)
 		result[i] = *a++ & *b++;
-#else
-	uint8 i;
-	XBYTE[SXA_CTRL0] = 0x20; //set CLS 1
-	XBYTE[SXA_CTRL0] = 0xC0; //set and mode 
-
-	a += 0x07; 
-	for(i=0;i<8;i++)
-	{
-		*(P_SXA_DATAA+i) = *a;
-		a--;			
-	}
-
-	b += 0x07;
-	for(i=0;i<8;i++)
-	{
-		*(P_SXA_DATAB+i) = *b;
-		b--;
-	}	
-
-	XBYTE[SXA_CTRL0] |= 0x01;
-	while(0);
-
-	result += 0x07;
-	/*for(i=0;i<8;i++)
-	{
-		*result = *(P_SXA_RESULT+i);
-		result--;
-	}*/
-	DmaRun(0x01,0x08,(uint16)result&0xff,((uint16)result)>>8,(uint16)P_SXA_RESULT&0xff,((uint16)P_SXA_RESULT)>>8,0x08,0);	
-	//result -= 0x07;	
-#endif
 }
 
 void ROL32(uint32 *out, uint32 x, uint8 n)
@@ -267,8 +170,6 @@ void ROL64(uint64* out, uint64 x, uint8 n)
 
 void SHASHIFT(uint8 *a, uint8 len, uint8 model, uint8 *result)
 {
-#if 1
-
 	uint32 a1;
 	uint64 tmp;
     
@@ -289,61 +190,6 @@ void SHASHIFT(uint8 *a, uint8 len, uint8 model, uint8 *result)
 		ROL64(&tmp, tmp, len);
 		UNPACK64(tmp, result);
 	}
-#else
-	uint8 i;
-	XBYTE[SXA_CTRL0] = 0x20; //set CLS 1
-	XBYTE[SXA_CTRL0] = 0x00; //set shift mode 
-
-	XBYTE[SXA_CTRL1] = 0x00;
-	XBYTE[SXA_CTRL1] = (model<<8) +len;
-
-	if(model == 1)   //model =1 32bit  
-	{
-		//32bit
-		a += 0x04; 
-		for(i=0;i<4;i++)
-		{
-			*(P_SXA_DATAB+i) = *a;
-			a--;			
-		}
-	}
-	else if(model == 0)
-	{
-		//64bit
-		a += 0x07; 
-		for(i=0;i<8;i++)
-		{
-			*(P_SXA_DATAB+i) = *a;
-			a--;			
-		}
-	}
-
-	XBYTE[SXA_CTRL0] |= 0x01;
-	while(0);
-
-	if(model)
-	{
-		//32bit
-		result += 0x04;
-		/*for(i=0;i<4;i++)
-		{
-			*result = *(P_SXA_RESULT+i);
-			result--;
-		}*/
-		DmaRun(0x01,0x08,(uint16)result&0xff,((uint16)result)>>8,(uint16)P_SXA_RESULT&0xff,((uint16)P_SXA_RESULT)>>8,0x04,0);		
-	}
-	else
-	{
-		//64bit
-		result += 0x07;
-		/*for(i=0;i<8;i++)
-		{
-			*result = *(P_SXA_RESULT+i);
-			result--;
-		}*/
-		DmaRun(0x01,0x08,(uint16)result&0xff,((uint16)result)>>8,(uint16)P_SXA_RESULT&0xff,((uint16)P_SXA_RESULT)>>8,0x08,0);	
-	}
-#endif
 }
 
 

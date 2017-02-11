@@ -1,16 +1,11 @@
-/**********************************************************************
-  Copyright (C), 2013-2014, SHHIC Co., Ltd. All Right Reserved.
-
-  文件名: sm3.h
-  作  者: 张伟    版本: V1.0.0    日期: 2014-02-20
-  
-  描  述: SM3算法头文件
-  依  赖: 无
-  历  史：
-          1. 张伟 2014-02-20 V1.0.0
-            (1) 初始版本。
-  
-***********************************************************************/
+//* Copyright (C) , Zhang Wei, 2014, All rights reserved.
+//*
+//* SM4 Cryptographic Algorithm of C Code.
+//*
+//* Author: Zhang Wei <d5c5ceb0@gmail.com>
+//* Date: 2014-03-10
+//*
+//* History: v1.0 initial verision
 
 #ifndef SM3_H_
 #define SM3_H_

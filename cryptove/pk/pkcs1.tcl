@@ -35,19 +35,28 @@ load [file join [file dirname [info script]] ../lib/libcrypto[info sharedlibexte
 # return 
 #        00     success
 ##
-proc eme_oaep_encode {em label msg hash_func seed klen} {
+proc eme_oaep_encode {em label msg hashtype klen} {
 	upvar $em emsg
-	
-	set lhash [$hash_func $label]
-	set hlen  [dict get $hash_struct $hash_func digest]
+
+	switch $hashtype {
+		sha1   {set cmd sha1_process; set hlen 20}
+		sha224 {set cmd sha224_process; set hlen 28}
+		sha256 {set cmd sha256_process; set hlen 32}
+		sha384 {set cmd sha384_process; set hlen 48}
+		sha512 {set cmd sha512_process; set hlen 64}
+		default {set cmd sha1_process; set hlen 20}
+	}
+
+	set lhash [$cmd $label]
 	set mlen  [expr [string length $msg]/2]
 	set ps [string repeat 00 [expr $klen - 2*$hlen - $mlen - 2]]
 	set db ${lhash}${ps}01$msg
 	
 	set seed [rand $hlen 0 256]
-	set db_mask [mgf1 $seed [expr $klen - $hlen - 1]]
+
+	set db_mask [mgf1 $hashtype $seed [expr $klen - $hlen - 1]]
 	set masked_db [xor $db $db_mask]
-	set seed_mask [mgf1 $masked_db $hlen]
+	set seed_mask [mgf1 $hashtype $masked_db $hlen]
 	set masked_seed [xor $seed $seed_mask]
 	
 	set emsg 00${masked_seed}${masked_db}
@@ -84,11 +93,19 @@ proc eme_oaep_encode {em label msg hash_func seed klen} {
 #        04     ps no cosist of 00
 ##
 
-proc eme_oaep_decode {msg label em hash_func klen} {
+proc eme_oaep_decode {msg label em hashtype klen} {
 	upvar $msg m
+
+	switch $hashtype {
+		sha1   {set cmd sha1_process; set hlen 20}
+		sha224 {set cmd sha224_process; set hlen 28}
+		sha256 {set cmd sha256_process; set hlen 32}
+		sha384 {set cmd sha384_process; set hlen 48}
+		sha512 {set cmd sha512_process; set hlen 64}
+		default {set cmd sha1_process; set hlen 20}
+	}
 	
-	set lhash [$hash_func $label]
-	set hlen  [dict get $hash_struct $hash_func digest]
+	set lhash [$cmd $label]
 	set emlen [expr [string length $em]/2]
 
 	# em [00||masked_seed||masked_db]
@@ -102,9 +119,9 @@ proc eme_oaep_decode {msg label em hash_func klen} {
 		return 01
 	}
 
-	set seed_mask [mgf1 $masked_db $hlen]
+	set seed_mask [mgf1 $hashtype $masked_db $hlen]
 	set seed [xor $seed_mask $masked_seed]
-	set db_mask   [mgrf $seed [expr $klen - $hlen - 1]]
+	set db_mask   [mgf1 $hashtype $seed [expr $klen - $hlen - 1]]
 	set db [xor $db_mask $masked_db]
 	
 	# db  [lhash2||ps||01||m]
@@ -125,7 +142,7 @@ proc eme_oaep_decode {msg label em hash_func klen} {
 		return 04
 	}
 
-	set sub_db [string range $idx end]
+	set sub_db [string range $sub_db $idx end]
 	set m [string range $sub_db 2 end]
 
 	return $m

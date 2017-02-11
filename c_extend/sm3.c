@@ -1,16 +1,11 @@
-/**********************************************************************
-  Copyright (C), 2013-2014, zhang wei,  All Right Reserved.
-
-  文件名: sm3.cpp
-  作  者: 张伟    版本: V1.0.0    日期: 2014-03-06
-  
-  描  述: SM3算法实现文件 
-  依  赖：无
-  历  史：
-          1. 张伟 2014-03-06 V1.0.0
-            (1) 初始版本。
-  
-***********************************************************************/
+//* Copyright (C) , Zhang Wei, 2014, All rights reserved.
+//*
+//* SM4 Cryptographic Algorithm of C Code.
+//*
+//* Author: Zhang Wei <d5c5ceb0@gmail.com>
+//* Date: 2014-03-10
+//*
+//* History: v1.0 initial verision
 
 #include "sm3.h"
 #include <stdio.h>

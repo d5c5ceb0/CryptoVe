@@ -1,15 +1,17 @@
 #===============================================================================
-#DES算法Tcl实现
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#实现了DES加解密功能，包括DES ECB模式加解密、3DES 2-keyECB模式加解密、 
-#3DES 3-key ECB模式加解密
+#DES
+#
 #
 #Wei Zhang <d5c5ceb0@gmail.com>   2016.06.17
 #
 #===============================================================================
-#函数介绍
-#1. desecb  DES ECB模式加解密                   desecb mode key data
-#2. tdesecb 3DES ECB模式加解密(2-key, 3-key)    tdesecb mode key data
+#1. desecb  DES ECB                   desecb mode key data
+#2. tdesecb 3DES ECB(2-key, 3-key)    tdesecb mode key data
 #===============================================================================
 
 package provide crypto 1.0.0

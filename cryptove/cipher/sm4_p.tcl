@@ -1,13 +1,16 @@
 #===============================================================================
-#SM4算法Tcl实现
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#实现了SM4加解密功能，包括SM4 ECB模式加解密
+#SM4
 #
 #Wei zhang <d5c5ceb0@gmail.com>   2016.06.17
 #
 #===============================================================================
-#函数介绍
-#1. sm4ecb  SM4 ECB模式加解密                   sm4ecb mode key data
+#
+#1. sm4ecb  SM4 ECB                  sm4ecb mode key data
 #===============================================================================
 
 package provide crypto 1.0.0

@@ -1,4 +1,9 @@
 #===============================================================================
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
 #sm2 for Tcl
 #
 #实现了256位、素数域SM2函数功能，包括生成Z值，生成E值，密钥派生kdf，密钥生成，签名验签，加密解密，

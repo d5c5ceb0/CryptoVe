@@ -1,4 +1,9 @@
 #===============================================================================
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
 #cipher mode for TCL
 #
 #block cipher mode 
@@ -309,7 +314,7 @@ proc cbc_update {args_list} {
   }
 	
 	set out ""
-  #00º”√‹ 01Ω‚√‹
+  #00-encrypt 01-decrypt
   if {$dir == [lindex $cipher_direction 0]} {
       for {set i 0} {$i < $mlen/($block_len*2)} {incr i 1} {
           set tmp_m [string range $messages [expr $i*$block_len*2] [expr ($i+1)*$block_len*2-1]]

@@ -1,12 +1,11 @@
-//* Copyright (C) , Zhang Wei, 2014, All rights reserved.
-//*
-//* SM4 Cryptographic Algorithm of C Code.
-//*
-//* Author: Zhang Wei <d5c5ceb0@gmail.com>
-//* Date: 2014-03-10
-//*
-//* History:
-//*
+/* 
+ *	This program is free software; you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation; either version 2 of the License, or
+ *	(at your option) any later version.
+ *
+ */
+
 #include "sm4.h"
 
 static UINT32 SM4_FK[4]=
@@ -46,37 +45,32 @@ static UINT32 SM4_Sbox[256] =
 0x18,0xf0,0x7d,0xec,0x3a,0xdc,0x4d,0x20,0x79,0xee,0x5f,0x3e,0xd7,0xcb,0x39,0x48
 };
 
-// 循环左移
 UINT32 SM4_RotL(UINT32 x, UINT8 i)
 {
     return (x<<i)|(x>>(32-i));
 }
 
-// 非线性变换t
 UINT32 SM4_TAO(UINT32 a)
 {
     return SM4_Sbox[(UINT8)a] | (SM4_Sbox[(UINT8)(a>>8)]<<8) | (SM4_Sbox[(UINT8)(a>>16)]<<16) | (SM4_Sbox[(UINT8)(a>>24)]<<24);
 }
 
-// 线性变换L
 UINT32 SM4_L(UINT32 b)
 {
     return b ^ SM4_RotL(b, 2) ^ SM4_RotL(b, 10) ^ SM4_RotL(b, 18) ^ SM4_RotL(b, 24);
 }
 
-// 合成置换T
 UINT32 SM4_T(UINT32 x)
 {
     return SM4_L(SM4_TAO(x));
 }
 
 
-// 轮函数F
 UINT32 SM4_F(UINT32 x0, UINT32 x1, UINT32 x2, UINT32 x3, UINT32 rk)
 {
     return x0 ^ SM4_T(x1 ^ x2 ^ x3 ^ rk);
 }
-// 反序变换R
+
 void SM4_R(UINT32 *o, UINT32 *i)
 {
     o[0] = i[3];
@@ -87,19 +81,16 @@ void SM4_R(UINT32 *o, UINT32 *i)
     return;
 }
 
-// 密钥线性变换L
 UINT32 SM4_KL(UINT32 b)
 {
     return b ^ SM4_RotL(b, 13) ^ SM4_RotL(b, 23);
 }
 
-// 密钥的合成置换T
 UINT32 SM4_KT(UINT32 x)
 {
     return SM4_KL(SM4_TAO(x));
 }
 
-// 密钥扩展KX
 void SM4_KX(UINT32 *rk, UINT32 *mk)
 {
     UINT32 k[4];
@@ -137,7 +128,7 @@ void SM4_ECB_32(UINT32 *o, UINT32 *i, UINT32 *k, UINT8 mode)
 
     SM4_KX(rk, k);
 
-    if(mode == 0)   //加密
+    if(mode == 0)   //encrypt
     {
         for(j = 0; j < 32; j++)
         {

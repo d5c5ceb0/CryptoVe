@@ -1,3 +1,11 @@
+/* 
+ *	This program is free software; you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation; either version 2 of the License, or
+ *	(at your option) any later version.
+ *
+ */
+
 #include <string.h>
 #include <tcl.h>
 #include "math.h"
@@ -18,7 +26,6 @@ int DLLEXPORT Crypto_Init(Tcl_Interp* interp);
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)<(b)?(b):(a))
 
-//十六进制字符串转换为字节数组
 int HexStrToByteArr(unsigned char out[],const char *in, unsigned int inStrLen)
 {
 	unsigned int i;
@@ -31,7 +38,6 @@ int HexStrToByteArr(unsigned char out[],const char *in, unsigned int inStrLen)
         char cHigh = in[i*2];
         char cLow = in[i*2+1];
 
-        //判断是否是合法的命令字符
         if( ( ( cHigh >= 0x30 ) && (cHigh <= 0x39 ) ) || ( ( cHigh >= 0x41) && ( cHigh <= 0x46 ) ) ||  ( ( cHigh >= 0x61) && ( cHigh <= 0x66 ) ))
         {
             cHigh = ( cHigh < 0x40 )? ( cHigh - 0x30 ):( (cHigh<0x50)?(cHigh - 0x37):(cHigh - 0x57) );
@@ -41,7 +47,6 @@ int HexStrToByteArr(unsigned char out[],const char *in, unsigned int inStrLen)
             return 0;
         }
 
-        //判断是否是合法的命令字符
         if( ( ( cLow >= 0x30 ) && ( cLow <= 0x39 ) ) || ( ( cLow >= 0x41 ) && ( cLow <= 0x46 ) ) || ( ( cLow >= 0x61) && ( cLow <= 0x66 ) ))
         {
             cLow = ( cLow < 0x40 )? ( cLow - 0x30 ):((cLow<0x50)?(cLow - 0x37):(cLow - 0x57));
@@ -58,8 +63,6 @@ int HexStrToByteArr(unsigned char out[],const char *in, unsigned int inStrLen)
 }
 
 
-//字节数组转换为16进制字符串
-//out 需要比 in 长1字节
 int ByteArrToHexStr(char out[], const unsigned char in[], unsigned int inBLen)
 {
 	unsigned int i;
@@ -71,10 +74,9 @@ int ByteArrToHexStr(char out[], const unsigned char in[], unsigned int inBLen)
 }
 
 /**************************************************************
-函数名称：VersionCmd
-功能说明：crypto lib version
-参数说明：该命令对应的TCL中用法: version
-返 回 值：
+name:VersionCmd
+description:crypto lib version
+usage:version
 **************************************************************/
 static int
 VersionCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
@@ -85,10 +87,9 @@ VersionCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 
 
 /**************************************************************
-函数名称：AddCmd
-功能说明：将Add函数封装成Tcl命令，进行大数加法运算，r = a + b
-参数说明：该命令对应的TCL中用法:  add a b
-返 回 值：
+name:AddCmd
+description:r = a + b
+usage:add a b
 **************************************************************/
 int AddCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -118,7 +119,6 @@ int AddCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 		return TCL_ERROR;
 	}
 
-	//调用Add函数
 	Add(inPara, &outPara[1]);
 
 	if (strlen(&outPara[1])%2) {
@@ -133,10 +133,9 @@ int AddCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 
 
 /**************************************************************
-函数名称：SubCmd
-功能说明：大数减法运算，r = a - b
-参数说明：该命令对应的TCL中用法:  sub a b
-返 回 值：
+name:SubCmd
+description:r = a - b
+usage:sub a b
 **************************************************************/
 int SubCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -165,7 +164,6 @@ int SubCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 		return TCL_ERROR;
 	}
 
-	//调用Sub函数
 	Sub(inPara, &outPara[1]);
 	if (outPara[1] == '-') {
 		if (strlen(&outPara[1])%2) {
@@ -193,10 +191,9 @@ int SubCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 
 
 /**************************************************************
-函数名称：MulCmd
-功能说明：大数乘法运算，r = a * b
-参数说明：该命令对应的TCL中用法:  mul a b
-返 回 值：
+name:MulCmd
+description:r = a * b
+usage:mul a b
 **************************************************************/
 int MulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -239,10 +236,9 @@ int MulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 /**************************************************************
-函数名称：DivCmd
-功能说明：大数除法运算，r = a / b
-参数说明：该命令对应的TCL中用法:  div a b
-返 回 值：
+name:DivCmd
+description:r = a / b
+usage:div a b
 **************************************************************/
 int DivCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -285,10 +281,9 @@ int DivCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 /**************************************************************
-函数名称：RemCmd
-功能说明：大数取模运算，r = a % b
-参数说明：该命令对应的TCL中用法:  rem a b
-返 回 值：
+name:RemCmd
+description:r = a % b
+usage:rem a b
 **************************************************************/
 int RemCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -331,10 +326,9 @@ int RemCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 /**************************************************************
-函数名称：CmpCmd
-功能说明：大数比较
-参数说明：该命令对应的TCL中用法:  cmp a b
-返 回 值：
+name:CmpCmd
+description: compare
+usage:cmp a b
 **************************************************************/
 int CmpCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -370,11 +364,11 @@ int CmpCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 	return TCL_OK;
 }
 
+
 /**************************************************************
-函数名称：OrrCmd
-功能说明：大数位或，右对齐
-参数说明：该命令对应的TCL中用法:  orr a b
-返 回 值：
+name:OrrCmd
+description: bit or
+usage:orr a b
 **************************************************************/
 int OrrCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -426,12 +420,10 @@ int OrrCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 	return TCL_OK;
 }
 
-
 /**************************************************************
-函数名称：AndCmd
-功能说明：大数位与，右对齐
-参数说明：该命令对应的TCL中用法:  and a b
-返 回 值：
+name:AndCmd
+description: 
+usage:and a b
 **************************************************************/
 int AndCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -483,12 +475,10 @@ int AndCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 	return TCL_OK;
 }
 
-
 /**************************************************************
-函数名称：NotCmd
-功能说明：大数位反，右对齐
-参数说明：该命令对应的TCL中用法:  not a
-返 回 值：
+name:NotCmd
+description: 
+usage: not a
 **************************************************************/
 int NotCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -531,10 +521,9 @@ int NotCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 
 
 /**************************************************************
-函数名称：XorCmd
-功能说明：大数异或，右对齐
-参数说明：该命令对应的TCL中用法:  xor a b
-返 回 值：
+name:XorCmd
+description: 
+usage: xor a b
 **************************************************************/
 int XorCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
@@ -587,12 +576,6 @@ int XorCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 
-/**************************************************************
-函数名称：SftCmd
-功能说明：大数移位，
-参数说明：该命令对应的TCL中用法:  sft mode x n
-返 回 值：
-**************************************************************/
 int SftCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[3];
@@ -622,7 +605,6 @@ int SftCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 		return TCL_ERROR;
 	}
 
-	//判断n参数是否有效
     if(Tcl_GetIntFromObj(interp, objv[3], &tmp) != TCL_OK) 
     {
         Tcl_SetObjResult(interp, Tcl_NewStringObj("Error:[sft mode x n] The arg n should be an interger.", -1));
@@ -643,12 +625,6 @@ int SftCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 
-/**************************************************************
-函数名称：GcdCmd
-功能说明：计算最大公约数，r = GCD(a, b)
-参数说明：该命令对应的TCL中用法:  gcd a b
-返 回 值：
-**************************************************************/
 int GcdCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[2];
@@ -690,12 +666,6 @@ int GcdCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 
-/**************************************************************
-函数名称：IsPrimeCmd
-功能说明：素性检测，r = IsPrime(a)
-参数说明：该命令对应的TCL中用法:  isprime a
-返 回 值：
-**************************************************************/
 int IsPrimeCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[2];
@@ -724,12 +694,6 @@ int IsPrimeCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST ob
 }
 
 
-/**************************************************************
-函数名称：GenPrimeCmd
-功能说明：将Add函数封装成Tcl命令，产生随机数。
-参数说明：该命令对应的TCL中用法:  genprime num
-返 回 值：
-**************************************************************/
 int GenPrimeCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[2];
@@ -758,12 +722,6 @@ int GenPrimeCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
 }
 
 
-/**************************************************************
-函数名称：ModAddCmd
-功能说明：大数模加运算，r = a + b mod n
-参数说明：该命令对应的TCL中用法:  modadd a b n
-返 回 值：
-**************************************************************/
 int ModAddCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[3];
@@ -816,12 +774,6 @@ int ModAddCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 }
 
 
-/**************************************************************
-函数名称：ModSubCmd
-功能说明：大数模减运算，r = a - b mod n
-参数说明：该命令对应的TCL中用法:  modsub a b n
-返 回 值：
-**************************************************************/
 int ModSubCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[3];
@@ -873,13 +825,6 @@ int ModSubCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 	return TCL_OK;
 }
 
-
-/**************************************************************
-函数名称：ModMulCmd
-功能说明：大数模乘运算，r = a * b mod n
-参数说明：该命令对应的TCL中用法:  modmul a b n
-返 回 值：
-**************************************************************/
 int ModMulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[3];
@@ -931,13 +876,6 @@ int ModMulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 	return TCL_OK;
 }
 
-
-/**************************************************************
-函数名称：ModInvCmd
-功能说明：大数模逆运算，r = a ^ -1 mod n
-参数说明：该命令对应的TCL中用法:  modinv a n
-返 回 值：
-**************************************************************/
 int ModInvCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[2];
@@ -983,12 +921,6 @@ int ModInvCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 }
 
 
-/**************************************************************
-函数名称：ModExpCmd
-功能说明：大数模幂运算，r = a ^ b mod n
-参数说明：该命令对应的TCL中用法:  modexp a b n
-返 回 值：
-**************************************************************/
 int ModExpCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[3];
@@ -1040,12 +972,6 @@ int ModExpCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 	return TCL_OK;
 }
 
-/**************************************************************
-函数名称：PointInCurveCmd
-功能说明：判断点在椭圆曲线上
-参数说明：该命令对应的TCL中用法:  ispoint (Px||Py) (p||a||b)
-返 回 值：
-**************************************************************/
 int PointInCurveCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[5];
@@ -1103,12 +1029,6 @@ int PointInCurveCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CON
 }
 
 
-/**************************************************************
-函数名称：PointAddCmd
-功能说明：椭圆曲线点加(倍点)运算，Pr = Pa + Pb
-参数说明：该命令对应的TCL中用法:  padd (Pax||Pay) (Pbx||Pby) (P||A||B)
-返 回 值：
-**************************************************************/
 int PointAddCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[7];
@@ -1178,12 +1098,6 @@ int PointAddCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
 	return TCL_OK;
 }
 
-/**************************************************************
-函数名称：PointMulCmd
-功能说明：椭圆曲线点乘(标量乘)运算，Q = [k]P
-参数说明：该命令对应的TCL中用法:  pmul k (Px||Py) (p||a||b)
-返 回 值：
-**************************************************************/
 int PointMulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[6];
@@ -1250,13 +1164,6 @@ int PointMulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST o
 	return TCL_OK;
 }
 
-
-/**************************************************************
-函数名称：EcMultPointMulCmd
-功能说明：椭圆曲线点乘(标量乘)运算，Q = [k]P + [k2]P2
-参数说明：该命令对应的TCL中用法:  mpmul k (Px||Py) k2 (P2x||P2y) (p||a||b)
-返 回 值：
-**************************************************************/
 int EcMultPointMulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[9];
@@ -1346,12 +1253,6 @@ int EcMultPointMulCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *C
 }
 
 
-/**************************************************************
-函数名称：RngCmd(有bug, not use)
-功能说明：将Add函数封装成Tcl命令，产生随机数。
-参数说明：该命令对应的TCL中用法:  rng len ?str?
-返 回 值：
-**************************************************************/
 int RngCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
 	char *inPara[2];
@@ -1384,16 +1285,6 @@ int RngCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 
-/**************************************************************
-函数名称：ADESEcbCmd
-功能说明：AES ECB模式加解密命令 
-参数说明：该命令对应的TCL中用法:  aesecb mode key data
-		 其中 mode: 00-加密，01-解密
-		      key: 密钥长度16字节，24字节，32字节。
-			  data: 数据长度为16字节，
-返 回 值：AES加解密结果。
-示    例：
-**************************************************************/
 int AESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
     char *in_str, *key_str;
@@ -1403,17 +1294,14 @@ int AESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
     int mlen, i, mode, dlen;
 	aes_context ctx;
 
-	//初始化解释器
 	Crypto_Init(interp);
 
-	//判断输入参数是否为3个(mode key data)
     if(objc != 4)
     {
 		Tcl_SetObjResult(interp, Tcl_NewStringObj("Error:[aesecb mode key data] The number of args must be 3.", -1));
         return TCL_ERROR;
     }
 
-	//判断mode参数是否有效
     if(Tcl_GetIntFromObj(interp, objv[1], &mode) != TCL_OK) 
     {
         Tcl_SetObjResult(interp, Tcl_NewStringObj("Error:[aesecb mode key data] The arg mode should be an interger(00-encrypt, 01-decrypt).", -1));
@@ -1425,7 +1313,6 @@ int AESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
 	}
 
-	//判断key参数是否有效
     key_str = Tcl_GetStringFromObj(objv[2], &mlen);
 	if((mlen!=16*2)&&(mlen!=24*2)&&(mlen!=32*2))
     {
@@ -1433,7 +1320,6 @@ int AESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
     }
 
-	//判断data参数是否有效
     in_str = Tcl_GetStringFromObj(objv[3], &dlen);
     if(dlen != 16*2)
     {
@@ -1441,38 +1327,24 @@ int AESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
     }
 
-	//将16进制表示的字符串转换为相对于的字节串
 	HexStrToByteArr(key, key_str, mlen);
 	HexStrToByteArr(in, in_str, dlen);
 
-	// ECB模式加密/解密
 	aes_set_key(&ctx, key, mlen/2*8 );
 	if(mode == 0)
 		aes_encrypt(&ctx, in, tmp2 );
 	else 
 		aes_decrypt(&ctx, in, tmp2 );
 
-	//字节串转换为字符串
     for(i=0; i<dlen/2; i++)
         sprintf(tmp+2*i, "%02x", tmp2[i]);
 
-	//输出结果
     Tcl_SetObjResult(interp, Tcl_NewStringObj(tmp, -1));
 
     return TCL_OK;
 }
 
 
-/**************************************************************
-函数名称：DESEcbCmd
-功能说明：DES ECB模式加解密命令，支持1~32组数据同时加解密。	 
-参数说明：该命令对应的TCL中用法:  desecb mode key data
-		 其中 mode: 00-加密，01-解密
-		      key: 密钥长度8字节
-			  message: 数据长度为8字节倍数
-返 回 值：DES加解密结果。
-示    例：
-**************************************************************/
 int DESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
     char *in_str, *key_str;
@@ -1480,17 +1352,14 @@ int DESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 	char tmp[0x401];
     int mlen, i, mode, dlen;
 
-	//初始化解释器
 	Crypto_Init(interp);
 
-	//判断输入参数是否为3个(mode key data)
     if(objc != 4)
     {
 		Tcl_SetObjResult(interp, Tcl_NewStringObj("Error:[desecb mode key data] The number of args must be 3.", -1));
         return TCL_ERROR;
     }
 
-	//判断Mode参数是否有效
     if(Tcl_GetIntFromObj(interp, objv[1], &mode) != TCL_OK) 
     {
         Tcl_SetObjResult(interp, Tcl_NewStringObj("Error:[desecb mode key data] The arg mode should be an interger(00-encrypt, 01-decrypt).", -1));
@@ -1502,7 +1371,6 @@ int DESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
 	}
 
-	//判断Key参数是否有效
     key_str = Tcl_GetStringFromObj(objv[2], &mlen);
     if(mlen != 16)
     {
@@ -1510,7 +1378,6 @@ int DESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
     }
 
-	//判断data参数是否有效
     in_str = Tcl_GetStringFromObj(objv[3], &dlen);
     if(dlen%16)
     {
@@ -1518,11 +1385,9 @@ int DESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
     }
 
-	//将16进制表示的字符串转换为相对于的字节串
 	HexStrToByteArr(key, key_str, mlen);
 	HexStrToByteArr(in, in_str, dlen);
 
-	// ECB模式加密/解密
 	if(mode == 0)
 	{
 		for(i = 0; i<(dlen/2)/8; i++)
@@ -1534,28 +1399,15 @@ int DESEcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 			Des_Decrypt(in+8*i, in+8*i, key);
 	}
 
-	//字节串转换为字符串
     for(i=0; i<dlen/2; i++)
         sprintf(tmp+2*i, "%02x", in[i]);
 
-	//输出结果
     Tcl_SetObjResult(interp, Tcl_NewStringObj(tmp, -1));
 
     return TCL_OK;
 }
 
 
-/**************************************************************
-函数名称：SM4EcbCmd
-功能说明：SM4 ECB模式加解密命令，支持1~32组数据同时加解密。	 
-参数说明：该命令对应的TCL中用法:  SM4Ecb mode key data
-		 其中 mode: 00-加密，01-解密
-		      key: 密钥长度16字节
-			  data: 数据长度为16字节倍数
-返 回 值：SM4加解密结果。
-示    例：<- sm4ecb 00 0123456789abcdeffedcba9876543210 0123456789abcdeffedcba9876543210
-          -> 681edf34d206965e86b3e94f536e4246
-**************************************************************/
 int SM4EcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
     char *in_str, *key_str;
@@ -1563,17 +1415,14 @@ int SM4EcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
 	char tmp[0x401];
     int mlen, i, mode, dlen;
 
-	//初始化解释器
 	Crypto_Init(interp);
 
-	//判断输入参数是否为3个(mode key data)
     if(objc != 4)
     {
 		Tcl_SetObjResult(interp, Tcl_NewStringObj("Error: [sm4ecb mode key data]  The number of args must be 3.", -1));
         return TCL_ERROR;
     }
 
-	//判断Mode参数是否有效
     if(Tcl_GetIntFromObj(interp, objv[1], &mode) != TCL_OK) 
     {
         Tcl_SetObjResult(interp, Tcl_NewStringObj("Error: [sm4ecb mode key data]  The arg mode should be an interger(00-encrypt, 01-decrypt).", -1));
@@ -1585,7 +1434,6 @@ int SM4EcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
 	}
 
-	//判断Key参数是否有效
     key_str = Tcl_GetStringFromObj(objv[2], &mlen);
     if(mlen != 32)
     {
@@ -1593,7 +1441,6 @@ int SM4EcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
     }
 
-	//判断Message参数是否有效
     in_str = Tcl_GetStringFromObj(objv[3], &dlen);
     if(dlen%32)
     {
@@ -1601,31 +1448,21 @@ int SM4EcbCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST obj
         return TCL_ERROR;
     }
 
-	//将16进制表示的字符串转换为相对于的字节串
 	HexStrToByteArr(key, key_str, mlen);
 	HexStrToByteArr(in, in_str, dlen);
 
-	// ECB模式加密/解密
     for(i = 0; i<(dlen/2)/16; i++)
         SM4_ECB(in+16*i, in+16*i, key, mode);
 
-	//字节串转换为字符串
     for(i=0; i<dlen/2; i++)
         sprintf(tmp+2*i, "%02x", in[i]);
 
-	//输出结果
     Tcl_SetObjResult(interp, Tcl_NewStringObj(tmp, -1));
 
     return TCL_OK;
 }
 
 
-/**************************************************************
-函数名称：MD5Cmd
-功能说明：计算消息的杂凑值
-参数说明：该命令对应的TCL中用法:  md5 Message
-返 回 值：
-**************************************************************/
 int MD5Cmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
     MD5_CTX ctx;
@@ -1674,12 +1511,6 @@ int MD5Cmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]
 }
 
 
-/**************************************************************
-函数名称：SM3HashCmd
-功能说明：计算消息的杂凑值
-参数说明：该命令对应的TCL中用法:  sm3 Message
-返 回 值：
-**************************************************************/
 int SM3HashCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
     SM3_CTX ctx;
@@ -1728,12 +1559,6 @@ int SM3HashCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST ob
 }
 
 
-/**************************************************************
-函数名称：SHashCmd
-功能说明：计算消息的杂凑值
-参数说明：该命令对应的TCL中用法:  sha mode Message
-返 回 值：
-**************************************************************/
 int SHashCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[])
 {
     Hash_CTX256 ctx;
@@ -1752,7 +1577,6 @@ int SHashCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv
 		return TCL_ERROR;
 	}
 
-	//判断Mode参数是否有效
     if(Tcl_GetIntFromObj(interp, objv[1], &mode) != TCL_OK) 
     {
         Tcl_SetObjResult(interp, Tcl_NewStringObj("Error: sha Argument Mode should be an interger(1 224 256 384 512).", -1));
@@ -1828,12 +1652,6 @@ int SHashCmd(ClientData cdata, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv
     return TCL_OK;
 }
 
-/**************************************************************
-函数名称：Crypto_Init
-功能说明：函数初始化过程，TCL解析器使用load命令装载库时,会寻找该函数
-参数说明：Tcl_Interp* interp tcl解析器指针
-返 回 值：NONE
-**************************************************************/
 int DLLEXPORT
 Crypto_Init(Tcl_Interp* interp)
 {
@@ -1874,8 +1692,6 @@ Crypto_Init(Tcl_Interp* interp)
 	Tcl_CreateObjCommand(interp, "sm3",(Tcl_ObjCmdProc *)SM3HashCmd,(ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
 	Tcl_CreateObjCommand(interp, "sha",(Tcl_ObjCmdProc *)SHashCmd, (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
 
-	//以下声明是为了使 crypto 包可以让命令 "package require algdll"
-    //来自动加载你写的这个库函数. 
 	if(Tcl_PkgProvide(interp, "crypto", "1.0.0") == TCL_ERROR) {
 		return TCL_ERROR;
 	}

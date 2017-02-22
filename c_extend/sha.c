@@ -1,14 +1,14 @@
 #include "sha.h"
 
-typedef     unsigned char		uint8;      // 无符号8位整型变量
-typedef     signed   char       int8;       // 有符号8位整型变量
-typedef     unsigned short      uint16;     // 无符号16位整型变量
-typedef     signed   short      int16;      // 有符号16位整型变量
-typedef     unsigned int        uint32;     // 无符号32位整型变量
-typedef     signed   int        int32;      // 有符号32位整型变量
+typedef     unsigned char		uint8;     
+typedef     signed   char       int8;      
+typedef     unsigned short      uint16;    
+typedef     signed   short      int16;     
+typedef     unsigned int        uint32;    
+typedef     signed   int        int32;     
 typedef     unsigned long long  uint64;
-typedef     float               fp32;       // 单精度浮点数（32位长度）
-typedef     double              fp64;       // 双精度浮点数（64位长度）
+typedef     float               fp32;      
+typedef     double              fp64;      
 
 
 
@@ -110,7 +110,6 @@ void sha512_final(Hash_CTX512 *ctx, uint8 *digest);
 #define SHA384_BLOCK_SIZE  SHA512_BLOCK_SIZE
 #define SHA224_BLOCK_SIZE  SHA256_BLOCK_SIZE
 
-//a 指向数据a 的指针 b 指向数据b的指针  result 指向结果的指针 所有指针都按照小端模式指向
 void SHAADD(uint8 *a, uint8 *b, uint8 *result)
 {
 	uint8 tmp_a;
@@ -229,11 +228,11 @@ uint8 Hash_Init(Hash_CTX256 *HashCtx,uint8 Hash_mode)
 {
 	if(Hash_mode == 0x01)
 	{
-	 	HashCtx->Result[0] = 0x67452301;	//低
+	 	HashCtx->Result[0] = 0x67452301;
 		HashCtx->Result[1] = 0xefcdab89;
 		HashCtx->Result[2] = 0x98badcfe;
 		HashCtx->Result[3] = 0x10325476;
-		HashCtx->Result[4] = 0xc3d2e1f0;	//高
+		HashCtx->Result[4] = 0xc3d2e1f0;
 
 		HashCtx->Len = 0x00;
 		HashCtx->TotalLen[0] = 0x00;
@@ -242,7 +241,7 @@ uint8 Hash_Init(Hash_CTX256 *HashCtx,uint8 Hash_mode)
 	}
 	else if(Hash_mode == 0x02)
 	{
-	   	HashCtx->Result[0] = 0xc1059ed8;	 //低
+	   	HashCtx->Result[0] = 0xc1059ed8;	
 		HashCtx->Result[1] = 0x367cd507;
 		HashCtx->Result[2] = 0x3070dd17;
 		HashCtx->Result[3] = 0xf70e5939;
@@ -258,14 +257,14 @@ uint8 Hash_Init(Hash_CTX256 *HashCtx,uint8 Hash_mode)
 	}
 	else if(Hash_mode == 0x03)
 	{
-		HashCtx->Result[0] = 0x6a09e667;	   //低
+		HashCtx->Result[0] = 0x6a09e667;	  
 		HashCtx->Result[1] = 0xbb67ae85;
 		HashCtx->Result[2] = 0x3c6ef372;
 		HashCtx->Result[3] = 0xa54ff53a;
 		HashCtx->Result[4] = 0x510e527f;
 		HashCtx->Result[5] = 0x9b05688c;
 		HashCtx->Result[6] = 0x1f83d9ab;
-		HashCtx->Result[7] = 0x5be0cd19;		//高
+		HashCtx->Result[7] = 0x5be0cd19;	
 		
 		HashCtx->Len = 0x00;
 		HashCtx->TotalLen[0] = 0x00;
@@ -277,8 +276,6 @@ uint8 Hash_Init(Hash_CTX256 *HashCtx,uint8 Hash_mode)
 
 uint8 Hash_Update(Hash_CTX256 *HashCtx,uint8 *Hash_DataIn,uint32 InLen)
 {
-
-	//初始值
 	if(HashCtx->AlgFlag == 0x01) //SHA1
 	{
 		sha1_update(HashCtx, Hash_DataIn, InLen);
@@ -296,8 +293,6 @@ uint8 Hash_Update(Hash_CTX256 *HashCtx,uint8 *Hash_DataIn,uint32 InLen)
 
 uint8 Hash_Final(Hash_CTX256 *HashCtx, uint8 *Hash_DataOut)
 {
-	//初始值
-	 
 	if(HashCtx->AlgFlag == 0x01) //SHA1
 	{
 		sha1_finish(HashCtx, Hash_DataOut);

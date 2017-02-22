@@ -1,41 +1,21 @@
-//* Copyright (C) , Zhang Wei, 2014, All rights reserved.
-//*
-//* SM4 Cryptographic Algorithm of C Code.
-//*
-//* Author: Zhang Wei <d5c5ceb0@gmail.com>
-//* Date: 2014-03-10
-//*
-//* History: v1.0 initial verision
-
+/* 
+ *	This program is free software; you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation; either version 2 of the License, or
+ *	(at your option) any later version.
+ *
+ */
 #include "sm3.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 #undef _DEBUG
 
-/***********************************************************************
-  函数名称：SM3_T
-  功能说明：常量T
-  参数说明：j (0 <= j <= 63)
-  返 回 值：返回0x79CC4519(0 <= j <= 15)
-            返回0x7A879D8A(16 <= j <= 63)
-  历    史：无
-***********************************************************************/
-
 #ifndef SM3_T
 
 #define SM3_T(j)  (((j) / 16) ? 0x7A879D8A : 0x79CC4519)
 
 #endif
-
-
-/***********************************************************************
-  函数名称：SM3_FF
-  功能说明：布尔函数FFj(X,Y,Z)
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
 
 extern UINT32 SM3_FF(UINT32 x, UINT32 y, UINT32 z, UINT32 j)
 {
@@ -45,15 +25,6 @@ extern UINT32 SM3_FF(UINT32 x, UINT32 y, UINT32 z, UINT32 j)
         return x ^ y ^ z;
 }
 
-
-/***********************************************************************
-  函数名称：SM3_GG
-  功能说明：布尔函数GGj(X,Y,Z)
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
-
 extern UINT32 SM3_GG(UINT32 x, UINT32 y, UINT32 z, UINT32 j)
 {
     if(j / 16)
@@ -62,56 +33,20 @@ extern UINT32 SM3_GG(UINT32 x, UINT32 y, UINT32 z, UINT32 j)
         return x ^ y ^ z;
 }
 
-
-/***********************************************************************
-  函数名称：SM3_ROL
-  功能说明：循环左移
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
-
 extern UINT32 SM3_ROL(UINT32 x, UINT8 n)
 {
     return (x << n) | (x >> (32 - n));
 }
-
-
-/***********************************************************************
-  函数名称：SM3_P0
-  功能说明：置换函数P0(X)
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
 
 extern UINT32 SM3_P0(UINT32 x)
 {
     return x ^ SM3_ROL(x, 9) ^ SM3_ROL(x, 17);
 }
 
-
-/***********************************************************************
-  函数名称：SM3_P1
-  功能说明：置换函数P1(X)
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
-
 extern UINT32 SM3_P1(UINT32 x)
 {
     return x ^ SM3_ROL(x, 15) ^ SM3_ROL(x, 23);
 }
-
-
-/***********************************************************************
-  函数名称：SM3_Wj
-  功能说明：消息扩展函数
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
 
 extern void SM3_Wj(UINT32 *W, UINT32 *W1, UINT8 *B)
 {
@@ -127,7 +62,6 @@ extern void SM3_Wj(UINT32 *W, UINT32 *W1, UINT8 *B)
         W1[j] = W[j] ^ W[j + 4];
 
 #ifdef _DEBUG
-	printf("\n填充后的消息\n");
 	for(j = 0; j < 16; j++)
 	{
 		printf("%08x ", W[j]);
@@ -135,7 +69,6 @@ extern void SM3_Wj(UINT32 *W, UINT32 *W1, UINT8 *B)
 			printf("\n");
 	}
 
-	printf("\n扩展后的消息\n");
 	printf("W0,W1,...,W67\n");
 	for(j = 0; j < 68; j++)
 	{
@@ -157,14 +90,6 @@ extern void SM3_Wj(UINT32 *W, UINT32 *W1, UINT8 *B)
 }
 
 
-/***********************************************************************
-  函数名称：SM3_CF
-  功能说明：压缩函数
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
-
 extern void SM3_CF(UINT32 *V, UINT8 *I)
 {
 	UINT32 j;
@@ -185,7 +110,6 @@ extern void SM3_CF(UINT32 *V, UINT8 *I)
     H = V[7];
 
 #ifdef _DEBUG
-	printf("\n迭代压缩中间值\n");
 	printf("-----A--------B--------C--------D--------E--------F--------G--------H-------\n");
 #endif
 
@@ -226,15 +150,6 @@ extern void SM3_CF(UINT32 *V, UINT8 *I)
      return;
 }
 
-
-
-/***********************************************************************
-  函数名称：sm3_init
-  功能说明：SM3初始化，建立上下文
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
 void sm3_init(SM3_CTX *ctx, UINT32 type)
 {
 
@@ -252,14 +167,6 @@ void sm3_init(SM3_CTX *ctx, UINT32 type)
     ctx->state_vector[6] = 0xE38DEE4D;
     ctx->state_vector[7] = 0xB0FB0E4E;
 }
-
-/***********************************************************************
-  函数名称：sm3_update
-  功能说明：SM3处理函数
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
 
 void sm3_update(SM3_CTX *ctx, UINT8 *in, UINT32 in_blen)
 {
@@ -298,15 +205,6 @@ void sm3_update(SM3_CTX *ctx, UINT8 *in, UINT32 in_blen)
 
     return;
 }
-
-
-/***********************************************************************
-  函数名称：sm3_final
-  功能说明：SM3输出函数
-  参数说明：
-  返 回 值：
-  历    史：  
-***********************************************************************/
 
 void sm3_final(SM3_CTX *ctx, UINT8 *digest)
 {
@@ -351,7 +249,6 @@ void sm3_final(SM3_CTX *ctx, UINT8 *digest)
 	}
 
 #ifdef _DEBUG
-	printf("\n杂凑值\n");
 	for(i=0; i<8; i++)
 	{
 		printf("%08x ", ctx->state_vector[i]);

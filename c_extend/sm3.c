@@ -8,6 +8,7 @@
 #include "sm3.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #undef _DEBUG
 
@@ -211,47 +212,52 @@ void sm3_final(SM3_CTX *ctx, UINT8 *digest)
     UINT32 i;
     UINT32 left_len, high, low;
 
-    left_len = ctx->total_blen[0]&(SM3_BLOCK_LEN-1);
+	SM3_CTX ctx_buf;
+	SM3_CTX *ctx2 = &ctx_buf;
 
-    low  = ( ctx->total_blen[0] <<  3 );
-    high = ( ctx->total_blen[0] >> 29 ) | ( ctx->total_blen[1] << 3 );
+	memcpy(ctx2, ctx, sizeof(SM3_CTX));
 
-    ctx->tmp_buf[left_len] = 0x80;
+    left_len = ctx2->total_blen[0]&(SM3_BLOCK_LEN-1);
+
+    low  = ( ctx2->total_blen[0] <<  3 );
+    high = ( ctx2->total_blen[0] >> 29 ) | ( ctx2->total_blen[1] << 3 );
+
+    ctx2->tmp_buf[left_len] = 0x80;
     for(i=left_len+1; i<SM3_BLOCK_LEN; i++)
-        ctx->tmp_buf[i] = 0;
+        ctx2->tmp_buf[i] = 0;
 	
 	
     if(left_len>=56)
     {
-        SM3_CF(ctx->state_vector, ctx->tmp_buf);
+        SM3_CF(ctx2->state_vector, ctx2->tmp_buf);
 
         for(i=0; i<SM3_BLOCK_LEN; i++)
-            ctx->tmp_buf[i] = 0;
+            ctx2->tmp_buf[i] = 0;
     }
 
-    ctx->tmp_buf[SM3_BLOCK_LEN-4]= (UINT8)(low>>24);
-	ctx->tmp_buf[SM3_BLOCK_LEN-3]= (UINT8)(low>>16);
-	ctx->tmp_buf[SM3_BLOCK_LEN-2]= (UINT8)(low>>8);
-	ctx->tmp_buf[SM3_BLOCK_LEN-1]= (UINT8)(low);
-    ctx->tmp_buf[SM3_BLOCK_LEN-8]= (UINT8)(high>>24);
-	ctx->tmp_buf[SM3_BLOCK_LEN-7]= (UINT8)(high>>16);
-	ctx->tmp_buf[SM3_BLOCK_LEN-6]= (UINT8)(high>>8);
-	ctx->tmp_buf[SM3_BLOCK_LEN-5]= (UINT8)(high);
+    ctx2->tmp_buf[SM3_BLOCK_LEN-4]= (UINT8)(low>>24);
+	ctx2->tmp_buf[SM3_BLOCK_LEN-3]= (UINT8)(low>>16);
+	ctx2->tmp_buf[SM3_BLOCK_LEN-2]= (UINT8)(low>>8);
+	ctx2->tmp_buf[SM3_BLOCK_LEN-1]= (UINT8)(low);
+    ctx2->tmp_buf[SM3_BLOCK_LEN-8]= (UINT8)(high>>24);
+	ctx2->tmp_buf[SM3_BLOCK_LEN-7]= (UINT8)(high>>16);
+	ctx2->tmp_buf[SM3_BLOCK_LEN-6]= (UINT8)(high>>8);
+	ctx2->tmp_buf[SM3_BLOCK_LEN-5]= (UINT8)(high);
 
-    SM3_CF(ctx->state_vector, ctx->tmp_buf);
+    SM3_CF(ctx2->state_vector, ctx2->tmp_buf);
 
-	for(i=0; i<ctx->type/32; i++)
+	for(i=0; i<ctx2->type/32; i++)
 	{
-		digest[i*4]   = (UINT8)(ctx->state_vector[i]>>24);
-		digest[i*4+1] = (UINT8)(ctx->state_vector[i]>>16);
-		digest[i*4+2] = (UINT8)(ctx->state_vector[i]>>8);
-		digest[i*4+3] = (UINT8)(ctx->state_vector[i]);
+		digest[i*4]   = (UINT8)(ctx2->state_vector[i]>>24);
+		digest[i*4+1] = (UINT8)(ctx2->state_vector[i]>>16);
+		digest[i*4+2] = (UINT8)(ctx2->state_vector[i]>>8);
+		digest[i*4+3] = (UINT8)(ctx2->state_vector[i]);
 	}
 
 #ifdef _DEBUG
 	for(i=0; i<8; i++)
 	{
-		printf("%08x ", ctx->state_vector[i]);
+		printf("%08x ", ctx2->state_vector[i]);
 		if((i+1)%8 == 0)
 			printf("\n");
 	}
@@ -261,3 +267,50 @@ void sm3_final(SM3_CTX *ctx, UINT8 *digest)
     return ;
 }
 
+
+#if 0
+
+void dump(char *msg, UINT8 *data, UINT8 len)
+{
+	int i;
+
+	printf("%s:\n", msg);
+	for (i = 0; i < len; i++) {
+		printf("%02x ", data[i]);
+	}
+	printf("\n");
+
+}
+int main() 
+{
+	// result
+	//"a"   623476ac18f65a2909e43c7fec61b49c7e764a91a18ccb82f1917a29c86c5e88
+	//"ab"  e07d8ee6e54586a459e30eb8d809e02194558e2b0b235a31f3226a3687faab88
+	//"abc" 66c7f0f462eeedd9d1f2d46bdc10e4e24167c4875cf2f7a2297da02b8f4ba8e0
+	
+	SM3_CTX ctx, ctx2;
+	UINT8 dig[0x20];
+
+	sm3_init(&ctx, SM3_256BITS);
+	sm3_update(&ctx, "abc", 3);
+	sm3_final(&ctx, dig);
+	dump("digest of abc is", dig, 0x20);
+
+
+	sm3_init(&ctx2, SM3_256BITS);
+	sm3_update(&ctx2, "a", 1);
+	sm3_final(&ctx2, dig);
+	dump("digest of a is", dig, 0x20);
+
+	sm3_update(&ctx2, "b", 1);
+	sm3_final(&ctx2, dig);
+	dump("digest of ab is", dig, 0x20);
+
+	sm3_update(&ctx2, "c", 1);
+	sm3_final(&ctx2, dig);
+	dump("digest of abc is", dig, 0x20);
+
+	return 0;
+}
+
+#endif

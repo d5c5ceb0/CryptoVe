@@ -280,9 +280,9 @@ proc ecc_verify {Curve Pubkey RS Ehash} {
 		return -code error {Error: ECDSA Ehash length error}	
 	}
 
-	if {$EByteLen < $NByteLen} {
+	#if {$EByteLen < $NByteLen} {
 		set temp_e [string repeat 00 [expr $NByteLen - $EByteLen]]$Ehash
-	} 
+	#} 
 
     set R [string range $RS 0 [expr $SByteLen/2*2-1]]
     set S [string range $RS [expr $SByteLen/2*2] end]

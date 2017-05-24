@@ -31,3 +31,5 @@ for windows
 3. using VC++ to build libcryto.dll, and copy the libcrypto.dll to cryptove/lib/
 4. run tclsh, and "source cryptove.tcl" for using.
 
+for mac
+to be continue.

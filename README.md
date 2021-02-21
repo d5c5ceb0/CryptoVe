@@ -7,11 +7,6 @@
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-## content
-
-[TOC]
-
-
 ## install
 
 * for linux
@@ -45,6 +40,100 @@ This program is free software; you can redistribute it and/or modify it under th
     1. compile config.c to run to generate mirdef.tst and miracl.lst
     move mirdef.tst to mirdef.h, compile the files in miracl.lst.
     run "bash macos".
+
+
+
+## content
+
+   * [cryptove User Guide](#cryptove-user-guide)
+      * [1. Introduction](#1-introduction)
+      * [2. Overview](#2-overview)
+      * [3. Cipher](#3-cipher)
+         * [3.1 DES](#31-des)
+            * [3.1.1 ECB](#311-ecb)
+            * [3.1.2 CBC](#312-cbc)
+         * [3.2 DES3](#32-des3)
+            * [3.2.1 ECB](#321-ecb)
+            * [3.2.2 CBC](#322-cbc)
+         * [3.3 AES](#33-aes)
+            * [3.3.1 ECB](#331-ecb)
+            * [3.3.2 CBC](#332-cbc)
+            * [3.3.3 CFB](#333-cfb)
+            * [3.3.4 OFB](#334-ofb)
+            * [3.3.5 CTR](#335-ctr)
+            * [3.3.6 XTS](#336-xts)
+         * [3.4 SM4](#34-sm4)
+            * [3.4.1 ECB](#341-ecb)
+            * [3.4.2 CBC](#342-cbc)
+      * [4. Hash](#4-hash)
+         * [4.1 MD5](#41-md5)
+         * [4.2 SHA1](#42-sha1)
+         * [4.3 SHA224](#43-sha224)
+         * [4.4 SHA256](#44-sha256)
+         * [4.5 SHA384](#45-sha384)
+         * [4.6 SHA512](#46-sha512)
+         * [4.7 SM3](#47-sm3)
+      * [5. MAC](#5-mac)
+         * [5.1 CBC-MAC](#51-cbc-mac)
+            * [5.1.1 CMAC-AES](#511-cmac-aes)
+            * [5.1.2 CBC-MAC-AES](#512-cbc-mac-aes)
+            * [5.1.3 XCBC-MAC-AES](#513-xcbc-mac-aes)
+         * [5.2 HMAC](#52-hmac)
+            * [5.2.1 HMAC-MD5](#521-hmac-md5)
+            * [5.2.2 HMAC-SHA1](#522-hmac-sha1)
+            * [5.2.3 HMAC-SHA224](#523-hmac-sha224)
+            * [5.2.4 HMAC-SHA256](#524-hmac-sha256)
+            * [5.2.5 HMAC-SHA384](#525-hmac-sha384)
+            * [5.2.6 HMAC-SHA512](#526-hmac-sha512)
+      * [6. PK](#6-pk)
+         * [6.1 BIG NUMBER](#61-big-number)
+            * [6.1.1 addition](#611-addition)
+            * [6.1.2 subtraction](#612-subtraction)
+            * [6.1.3 multiplication](#613-multiplication)
+            * [6.1.4 division](#614-division)
+            * [6.1.5 remainder](#615-remainder)
+            * [6.1.6 compare](#616-compare)
+            * [6.1.7 or](#617-or)
+            * [6.1.8 and](#618-and)
+            * [6.1.9 not](#619-not)
+            * [6.1.10 xor (exclusive or)](#6110-xor-exclusive-or)
+            * [6.1.11 shift](#6111-shift)
+            * [6.1.12 modadd (modular addition)](#6112-modadd-modular-addition)
+            * [6.1.13 modsub (modular subtraction)](#6113-modsub-modular-subtraction)
+            * [6.1.14 modmul (modular multiplication)](#6114-modmul-modular-multiplication)
+            * [6.1.15 modinv (modular inverse)](#6115-modinv-modular-inverse)
+            * [6.1.16 modexp (modular exponent)](#6116-modexp-modular-exponent)
+            * [6.1.17 gcd](#6117-gcd)
+            * [6.1.18 genprime](#6118-genprime)
+            * [6.1.19 isprime](#6119-isprime)
+            * [6.1.20 ispoint (is a ecc point)](#6120-ispoint-is-a-ecc-point)
+            * [6.1.21 padd (point addition)](#6121-padd-point-addition)
+            * [6.1.22 pmul (point multiplication)](#6122-pmul-point-multiplication)
+            * [6.1.23 mpmul (multiple point multiplication)](#6123-mpmul-multiple-point-multiplication)
+         * [6.2 RSA](#62-rsa)
+            * [6.2.1 keygen](#621-keygen)
+            * [6.2.2 keygen with p and q](#622-keygen-with-p-and-q)
+            * [6.2.3 encription &amp; verify](#623-encription--verify)
+            * [6.2.4 decryption &amp; sign](#624-decryption--sign)
+            * [6.2.5 crt](#625-crt)
+         * [6.3 SM2](#63-sm2)
+            * [6.3.1 hash z](#631-hash-z)
+            * [6.3.2 hash e](#632-hash-e)
+            * [6.3.3 keygen](#633-keygen)
+            * [6.3.4 sign](#634-sign)
+            * [6.3.5 verify](#635-verify)
+            * [6.3.6 key exchange](#636-key-exchange)
+            * [6.3.7 encryption](#637-encryption)
+            * [6.3.8 decryption](#638-decryption)
+      * [7. random number](#7-random-number)
+      * [8. CRC](#8-crc)
+         * [8.1 crc16](#81-crc16)
+         * [9.1 dec2hex](#91-dec2hex)
+         * [9.2 endian](#92-endian)
+         * [9.3 hex2bin](#93-hex2bin)
+         * [9.4 bin2hex](#94-bin2hex)
+      * [10 AEAD](#10-aead)
+      * [11 ECC](#11-ecc)
 
 
 ## 1. Introduction
@@ -312,9 +401,9 @@ des3_cbc_done   cbc_ctx
 #result is 15e40b8bf0ab86caac5a6b9178a94ce41836e1b7e7d9bdd54f26a29ac581d0a0
 ```
 
-## 3.3 AES
+### 3.3 AES
 
-### 3.3.1 ECB
+#### 3.3.1 ECB
 
 * Integrated operation:
 
@@ -606,7 +695,7 @@ aes_ctr_done   ctr_ctx
 #the result is 874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff5ae4df3edbd5d35e5b4f09020db03eab1e031dda2fbe03d1792170a0f3009cee
 ```
 
-### 3.3.6 XTS
+#### 3.3.6 XTS
 
 * Integrated operation:
 
@@ -2673,3 +2762,11 @@ bin2hex str
 bin2hex 012345
 #the result is 303132333435
 ```
+
+## 10 AEAD
+
+to be continue
+
+## 11 ECC
+
+to be continue

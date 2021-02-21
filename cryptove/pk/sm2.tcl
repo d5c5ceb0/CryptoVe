@@ -237,6 +237,17 @@ proc sm2_keygen {} {
     return [list ${Prikey} ${Pubkey}]
 }
 
+proc sm2_keygen_sk {prikey} {
+    global sm2_p sm2_a sm2_b sm2_n sm2_gx sm2_gy
+
+    set PAB ${sm2_p}${sm2_a}${sm2_b}
+    set Gxy ${sm2_gx}${sm2_gy}
+    set Pubkey [pmul $prikey $Gxy $PAB]
+
+	return $Pubkey
+
+}
+
 
 #==============================================================================================
 #sm2_sig
@@ -299,6 +310,7 @@ proc sm2_sig {Random Prikey Ehash} {
 
     #A6. 计算s=(1+dA)^-1 * (k-r*dA) mod n 
     set inv_1_add_da [modinv [modadd $Prikey 01 $sm2_n] $sm2_n]
+    puts inv_$inv_1_add_da
     set mul_r_da [modmul $r $Prikey $sm2_n]
     set sub_k_mulrda [modsub $Random $mul_r_da $sm2_n]
 

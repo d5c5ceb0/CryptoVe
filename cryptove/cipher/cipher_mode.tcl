@@ -1590,3 +1590,52 @@ proc xcbcmac_process {args_list} {
 	return $out
 
 }
+
+proc ccm_process {args_list} {
+    set alg [lindex $args_list 0]
+    set M [lindex $args_list 1]
+    set L [lindex $args_list 2]
+    set AAD [lindex $args_list 3]
+    set key [lindex $args_list 4]
+    set messages [lindex $args_list 5]
+
+    set LL [dec2hex [expr 1 << 6 | ((($M-2) / 2) << 3) | ($L - 1)]]
+
+    return $LL
+}
+
+proc aesccm_enc {L M Nonce Msg AAD key} {
+    #TODO Lsize = 15 - nonce ??
+    set LL [dec2hex [expr 1<<6 | (($M-2) / 2) << 3 | ($L - 1)]]
+    set Lens [expr 15 - [string length $Nonce]/2]
+    set MsgLen [Len $Msg]
+    set b0 ${LL}${Nonce}[string repeat 00 [expr $Lens - [string length $MsgLen]/2]]$MsgLen
+    puts $b0
+
+    set aadLen [expr [string length $AAD] / 2]
+    set aadl [Len $AAD]
+    #TODO b1 size is not away 2
+    set b1 [string repeat 00 [expr 2 - [string length $aadl]/2]]${aadl}${AAD}
+    set b1 $b1[string repeat 00 [expr 16 - [string length $b1]/2%16]]
+    puts $b1
+    set xxx [expr [string length $Msg]/2%16]
+    if {$xxx != 0} {
+        set b2 $Msg[string repeat 00 [expr 16 - $xxx]]
+    } else {
+        set b2 $Msg
+    }
+
+    set c1 [aes_cbcmac_process $key ${b0}${b1}${b2}]
+    puts $b0$b1$b2
+    puts c1_$c1
+
+    set Lens [expr 15 - [string length $Nonce]/2]
+    set iv [dec2hex [expr $L - 1]]${Nonce}[string repeat 00 [expr $Lens]]
+    puts $iv
+    set s0 [aes_ecb_process enc $key $iv]
+    set tag [string range [xor $s0 $c1] 0 [expr $M * 2 - 1]]
+    set iv [add $iv 01]
+    set cc [aes_ctr_process enc $key $iv $Msg]_${tag}
+
+    return $cc
+}

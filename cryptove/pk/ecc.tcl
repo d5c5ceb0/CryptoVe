@@ -120,6 +120,13 @@ set ecc_curve_list {
 		ecc_gx "6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296"
 		ecc_gy "4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5"
 	}
+	curve25519 {
+		ecc_p "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffed"
+		ecc_n "1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed"
+		ecc_gx "0000000000000000000000000000000000000000000000000000000000000007"
+		ecc_gy "20ae19a1b8a086b4e01edd2c7748d14c923d4d7e6d7c61b229e9c5a27eced3d9"
+
+	}
 	secp384r1 {
 		ecc_p  FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFF
 		ecc_a  FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFC
@@ -217,7 +224,9 @@ proc ecc_sign {Curve Random Prikey Ehash} {
 
 	if {$EByteLen < $NByteLen} {
 		set temp_e [string repeat 00 [expr $NByteLen - $EByteLen]]$Ehash
-	} 
+	} else {
+        set temp_e $Ehash
+    }
 
 	if {($TmpK == 0) || ($TmpK > ($TmpN-1))} {
 		return -code error {Error: ECDSA Random error}	
@@ -280,6 +289,7 @@ proc ecc_verify {Curve Pubkey RS Ehash} {
 		return -code error {Error: ECDSA Ehash length error}	
 	}
 
+	puts $Ehash
 	#if {$EByteLen < $NByteLen} {
 		set temp_e [string repeat 00 [expr $NByteLen - $EByteLen]]$Ehash
 	#} 
@@ -320,6 +330,8 @@ proc ecc_verify {Curve Pubkey RS Ehash} {
     set R1 [string repeat 00 [expr $NByteLen-$x1y1len/2]]$R1
     set TmpR1 0x$R1
     set TmpR 0x$R
+	puts r1_$TmpR1
+	puts r_$TmpR
     if {$TmpR1 != $TmpR} {
         return -1
     } else {
@@ -343,5 +355,88 @@ proc ecc_dh {curve prikey pubkey} {
 
 	return [string range [pmul $prikey $pubkey $PAB] 0 [expr $xlen*2-1]]
 
+}
+
+proc pmul_ecc256 {k point} {
+	global ecc_curve_list
+	set curve secp256r1
+
+	set ec_p  [dict get [dict get $ecc_curve_list $curve] ecc_p]
+	set ec_a  [dict get [dict get $ecc_curve_list $curve] ecc_a]
+	set ec_b  [dict get [dict get $ecc_curve_list $curve] ecc_b]
+	set ec_n  [dict get [dict get $ecc_curve_list $curve] ecc_n]
+	set ec_gx [dict get [dict get $ecc_curve_list $curve] ecc_gx]
+	set ec_gy [dict get [dict get $ecc_curve_list $curve] ecc_gy]
+	
+    set PAB ${ec_p}${ec_a}${ec_b}
+
+	set xlen [expr [string length $ec_gx]/2]
+
+	return [pmul $k $point $PAB]
+}
+
+proc padd_ecc256 {p1 p2} {
+	global ecc_curve_list
+	set curve secp256r1
+
+	set ec_p  [dict get [dict get $ecc_curve_list $curve] ecc_p]
+	set ec_a  [dict get [dict get $ecc_curve_list $curve] ecc_a]
+	set ec_b  [dict get [dict get $ecc_curve_list $curve] ecc_b]
+	set ec_n  [dict get [dict get $ecc_curve_list $curve] ecc_n]
+	set ec_gx [dict get [dict get $ecc_curve_list $curve] ecc_gx]
+	set ec_gy [dict get [dict get $ecc_curve_list $curve] ecc_gy]
+	
+    set PAB ${ec_p}${ec_a}${ec_b}
+	return [padd $p1 $p2 $PAB]
+}
+
+proc ecdsa_sign {hmode curve k msg} {
+    global ecc_curve_list
+    puts $hmode
+
+    set trunkbit 0
+    if {$curve == "secp224k1"} {
+        set h [${hmode}_process ""]
+        set hashsize [expr [string length $h] / 2 * 8]
+        set trunkbit [expr $hashsize - 225]
+    }
+
+
+    set klen [expr [string length $k]/2]
+    set random 00000000[rand [expr $klen-4] 0 256]
+    puts m_[${hmode}_process $msg]
+    if {$trunkbit == 0} {
+        set mhash [string range [${hmode}_process $msg] 0 [expr $klen*2 - 1]]
+    } else {
+        set ec_n [dict get [dict get $ecc_curve_list $curve] ecc_n]
+        set mhash [sft R [${hmode}_process $msg] $trunkbit]
+        set mhash [rem $mhash $ec_n]
+    }
+
+    return [ecc_sign $curve $random $k $mhash]
+}
+
+proc ecdsa_verify {hmode curve Q sig msg} {
+    global ecc_curve_list
+    puts $hmode
+
+    set trunkbit 0
+    if {$curve == "secp224k1"} {
+        set h [${hmode}_process ""]
+        set hashsize [expr [string length $h] / 2 * 8]
+        set trunkbit [expr $hashsize - 225]
+    }
+
+    set klen [expr [string length $Q]/2/2]
+    if {$trunkbit == 0} {
+        set mhash [string range [${hmode}_process $msg] 0 [expr $klen*2 - 1]]
+    } else {
+        set ec_n [dict get [dict get $ecc_curve_list $curve] ecc_n]
+        set mhash [sft R [${hmode}_process $msg] $trunkbit]
+        set mhash [rem $mhash $ec_n]
+    }
+    set dout [ecc_verify $curve $Q $sig $mhash]
+
+    return $dout
 }
 

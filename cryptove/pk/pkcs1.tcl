@@ -419,22 +419,52 @@ proc bitlen {str} {
 	
 }
 
-proc rsa_sign_pss {hashtype d n msg salt} {
-
-	#set embits [expr [string length $em]/2*8 - [bitlen $em]]
-	set embits 2047
-	set em [emsa_pss_encode $hashtype $msg $salt $embits]
-
-	set c [rsa_dec $d $n $em]
-	return $c
+proc rsa_pkcs1_v15_sig {d n hmode din bitlen} {
+    set em [emsa_pkcs1_v1_5_encode $hmode $din [expr $bitlen / 8]]
+    set sig [rsa_dec $d $n $em]
+    return $sig
 }
 
-proc rsa_verify_pss {hashtype e n s msg } {
-	set em [rsa_enc $e $n $s]
-	puts "em=$em"
-	#set embits [expr [string length $em]/2*8 - [bitlen $em]]
-	set embits 2047
-	return [emsa_pss_decode $hashtype $msg $em $embits]
+proc rsa_pkcs1_v15_ver {e n hmode din sig bitlen} {
+    set em [rsa_enc $e $n $sig]
+    set ret [emsa_pkcs1_v1_5_encode $hmode $em [expr $bitlen / 8]]
+    return $ret
 }
 
+proc rsa_pkcs1_pss_sign {d n hmode din salt bitlen} {
+    set em [emsa_pss_encode $hmode $din $salt [expr $bitlen - 1]]
+    set rs [rsa_dec $d $n $em]
+    return $rs
+}
 
+proc rsa_pkcs1_pss_ver {e n hmode din sig bitlen} {
+    set em [rsa_enc $e $n $sig]
+    set ret [emsa_pss_decode $hmode $din $em [expr $bitlen - 1]]
+    return $ret
+}
+
+proc rsa_pkcs1_v15_enc { e n din bitlen} {
+    eme_pkcs1_v1_5_encode em $din [expr $bitlen / 8]
+    set em [rsa_enc $e $n $em]
+    return $em
+}
+
+proc rsa_pkcs1_v15_dec {d n din bitlen} {
+    set mm ""
+    set em [rsa_dec $d $n $din]
+    eme_pkcs1_v1_5_decode mm 00$em [expr $bitlen / 8]
+    return $mm
+}
+
+proc rsa_pkcs1_oaep_enc {e n hmode din bitlen} {
+    set em ""
+    eme_oaep_encode em "" $din $hmode [expr $bitlen / 8]
+    set ret [rsa_enc $e $n $em]
+    return $ret
+}
+proc rsa_pkcs1_oaep_dec {d n hmode din bitlen} {
+    set mm ""
+    set em [rsa_dec $d $n $din]
+    set ret [eme_oaep_decode mm "" 00$em $hmode [expr $bitlen / 8]]
+    return $mm
+}

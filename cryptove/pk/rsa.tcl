@@ -12,10 +12,10 @@
 #
 #===============================================================================
 #函数介绍
-#1. rsa_keygen: 生成密钥，  rsa_keygen e nlen 
-#2. rsa_enc :   加密或签名，rsa_enc e n M 
-#3. rsa_dec:    解密或验签，rsa_dec d n C
-#4. rsa_crt:    CRT运算，   rsa_crt p q dP dQ Qinv C
+#1. rsa_keygen: rsa_keygen e nlen
+#2. rsa_enc :   rsa_enc e n M
+#3. rsa_dec:    rsa_dec d n C
+#4. rsa_crt:    rsa_crt p q dP dQ Qinv C
 #=============================================================================================
 
 package provide crypto 1.0.0

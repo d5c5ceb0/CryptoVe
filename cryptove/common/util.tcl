@@ -31,6 +31,15 @@ proc dec2hex {dec} {
 	return $ret
 }
 
+proc dec2hex2 {num args} {
+	set y ""
+	for {set i 0} {$i < $num} {incr i 1} {
+		set x [lindex $args $i]
+		append y [dec2hex $x]
+	}
+	puts $y
+}
+
 #´óÐ¡¶Ë×ª»»
 proc endian {str} {
     
@@ -152,5 +161,9 @@ proc strsp {str not} {
     return $ret
 }
 
-
+proc hexstr2binfile {str dstfile} {
+    set fnd [open $dstfile wb]
+    puts -nonewline $fnd [hex2bin $str]
+    close $fnd
+}
 

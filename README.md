@@ -2237,6 +2237,35 @@ mpmul 3538D6F877B83AB3C9E298BBA7459C9629B533281A5A823EAC601DE8CFF5A0CB 32C4AE2C1
 #the result is D6D2FD1E1950EAA66A5B6F91AE90ECDF2E839A3EEAA4F859F7B7561F3749630135AF9B85C8A3DD09521438D922B68F08E79819E4B11C1E0315D8134AB13D3139
 ```
 
+#### 6.1.24 motgomery & jacobian
+
+**COMMAND:**
+
+```
+ to_mont_domain : convert from montgomery domain
+ from_mont_domain : convert to montgomery domain
+ modadd_mont : modadd in montgomery domain
+ modsub_mont : modsub in montgomery domain
+ modinv_mont : modin in montgomery domain
+ modmul_mont : modmul in montgomery domain
+ a2j : affine to jacobian
+ j2a : jacobian to affine
+ a2j_mont: affine to jacobian in montgomery domain
+ j2a_mont: jacobian to affine in montgomery domain
+ pdbl_j_mont : point double in montgomery domain in montgomery domain
+ padd_j_mont : point add in montgomery domain in jacobian coordinates
+
+```
+
+|paras     | descrption                                  |
+|----------|---------------------------------------------|
+|k         | scalar number                               |
+
+**EXAMPLE:**
+
+```
+```
+
 ### 6.2 RSA
 
 #### 6.2.1 keygen

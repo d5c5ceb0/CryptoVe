@@ -1635,7 +1635,7 @@ proc aesccm_enc {L M Nonce Msg AAD key} {
     set s0 [aes_ecb_process enc $key $iv]
     set tag [string range [xor $s0 $c1] 0 [expr $M * 2 - 1]]
     set iv [add $iv 01]
-    set cc [aes_ctr_process enc $key $iv $Msg]_${tag}
+    set cc [list [aes_ctr_process enc $key $iv $Msg] ${tag}]
 
     return $cc
 }

@@ -1,13 +1,10 @@
-# cryptove User Guide
+CryptoVe, a tcl-based cryptographic liabrary
 
->> by Wei Zhang
->> <d5c5ceb0@gmail.com>
-
-## license
+# license
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-## install
+# install
 
 * for linux
 
@@ -41,7 +38,10 @@ This program is free software; you can redistribute it and/or modify it under th
     move mirdef.tst to mirdef.h, compile the files in miracl.lst.
     run "bash macos".
 
+# cryptove User Guide
 
+>> by Wei Zhang
+>> <d5c5ceb0@gmail.com>
 
 ## content
 
@@ -128,12 +128,23 @@ This program is free software; you can redistribute it and/or modify it under th
       * [7. random number](#7-random-number)
       * [8. CRC](#8-crc)
          * [8.1 crc16](#81-crc16)
+      * [9. util](#9-util)
          * [9.1 dec2hex](#91-dec2hex)
          * [9.2 endian](#92-endian)
          * [9.3 hex2bin](#93-hex2bin)
          * [9.4 bin2hex](#94-bin2hex)
+         * [9.5 strsp](#95-strsp)
+         * [9.7 strcat](#97-strcat)
       * [10 AEAD](#10-aead)
+         * [10.1 aes_ccm (need to update)](#101-aes_ccm-need-to-update)
       * [11 ECC](#11-ecc)
+         * [ecdsa_sign](#ecdsa_sign)
+         * [ecdsa_verify](#ecdsa_verify)
+      * [12 Stream](#12-stream)
+         * [12.1 chacha20](#121-chacha20)
+         * [12.2 poly1305_mac](#122-poly1305_mac)
+         * [12.3 rc4](#123-rc4)
+
 
 
 ## 1. Introduction
@@ -2702,13 +2713,15 @@ crc16Xmodem     data
 for XMODEM, ZMODEM, CRC-16/ACORN
 ```
 
-##9. util
+## 9. util
 
 ### 9.1 dec2hex
 
 **COMMAND:**
 ```
 dec2hex dec
+
+dec2hex2 num args_list
 ```
 
 **EXAMPLE:**
@@ -2716,6 +2729,9 @@ dec2hex dec
 ```
 dec2hex 16
 #the result is 10
+
+dec2hex 3 16 17 18
+#the result is 101112
 ```
 
 ### 9.2 endian
@@ -2739,6 +2755,10 @@ endian 00112233445566778899
 
 ```
 Hex2bin str
+
+hex2binfile srcfile dstfile
+
+hexstr2binfile str dstfile
 ```
 
 **EXAMPLE:**
@@ -2754,6 +2774,8 @@ hex2bin 303132333435
 
 ```
 bin2hex str
+
+bin2hexfile srcfile dstfile
 ```
 
 **EXAMPLE:**
@@ -2763,10 +2785,198 @@ bin2hex 012345
 #the result is 303132333435
 ```
 
+### 9.5 strsp
+
+**COMMAND:**
+
+```
+strsp str delimiter
+```
+
+**EXAMPLE:**
+
+```
+strsp 01020304 ,
+#the result is 01,02,03,04
+```
+
+### 9.7 strcat
+
+**COMMAND:**
+
+```
+strcat str args
+```
+
+**EXAMPLE:**
+
+```
+strcat 01 02 03 04
+#the result is 01020304
+```
+
 ## 10 AEAD
 
-to be continue
+### 10.1 aes_ccm (need to update)
+
+**COMMAND:**
+
+```
+aesccm_enc L M Nonce Msg AAD key
+```
+
+
+|paras     | descrption                                  |
+|----------|---------------------------------------------|
+| L        |
+| M        |
+| Nonce    |
+| Msg      |
+| AAD      |
+| key      |
+
+
+**EXAMPLE:**
+
+```
+set key c0c1c2c3c4c5c6c7c8c9cacbcccdcecf
+set nonce 00000003020100a0a1a2a3a4a5
+set Msg 08090a0b0c0d0e0f101112131415161718191a1b1c1d1e
+set AAD 0001020304050607
+set M 8
+set L 2
+aesccm_enc $L $M $nonce $Msg $AAD $key
+#the result is {588c979a61c663d2f066d0c2c0f989806d5f6b61dac384 17e8d12cfdf926e0}
+```
 
 ## 11 ECC
 
-to be continue
+### ecdsa_sign
+
+**COMMAND:**
+
+```
+ecdsa_sign hmode curve privkey msg
+
+```
+
+
+|paras     | descrption                                  |
+|----------|---------------------------------------------|
+|hmode     | support sha1/sha224/sha256/sha384/sha512
+|curve     | support secp192r1/secp192k1/secp224r1/secp224r1/secp256r1/secp256k1/secp384r1/secp521r1
+|privkey   | private key
+|msg       | msg to be signed
+
+**EXAMPLE:**
+
+```
+set msg 0102030405
+set curve secp224k1
+set hmode sha224
+
+
+set keys [ecc_keygen $curve]
+set k [lindex $keys 0]
+set Q [lindex $keys 1]
+
+set sig [ecdsa_sign $hmode $curve $k $msg]
+puts $sig
+set r [lindex $sig 0]
+set s [lindex $sig 1]
+
+puts [ecdsa_verify $hmode $curve $Q ${r}$s $msg]
+```
+
+### ecdsa_verify
+
+**COMMAND:**
+
+```
+ecdsa_verify hmode curve pubkey sig msg
+
+```
+
+
+|paras     | descrption                                  |
+|----------|---------------------------------------------|
+|hmode     | support sha1/sha224/sha256/sha384/sha512
+|curve     | support secp192r1/secp192k1/secp224r1/secp224r1/secp256r1/secp256k1/secp384r1/secp521r1
+|pubkey    | public key
+|sig       | signature
+|msg       | msg to be signed
+
+**EXAMPLE:**
+
+```
+set msg 0102030405
+set curve secp224k1
+set hmode sha224
+
+
+set keys [ecc_keygen $curve]
+set k [lindex $keys 0]
+set Q [lindex $keys 1]
+
+set sig [ecdsa_sign $hmode $curve $k $msg]
+puts $sig
+set r [lindex $sig 0]
+set s [lindex $sig 1]
+
+puts [ecdsa_verify $hmode $curve $Q ${r}$s $msg]
+```
+## 12 Stream
+
+### 12.1 chacha20
+
+
+**COMMAND:**
+
+```
+chacha20_block key counter nonce
+```
+
+**EXAMPLE:**
+
+```
+set key 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+set nonce 000000090000004a00000000
+set counter 00000001
+chacha20_block $key $counter $nonce
+#the result : 10F1E7E4D13B5915500FDD1FA32071C4C7D1F4C733C068030422AA9AC3D46C4ED2826446079FAA0914C2D705D98B02A2B5129CD1DE164EB9CBD083E8A2503C4E
+```
+
+### 12.2 poly1305_mac
+
+**COMMAND:**
+
+```
+poly1305_mac msg key
+```
+
+**EXAMPLE:**
+
+```
+set msg 43727970746f6772617068696320466f72756d2052657365617263682047726f7570
+set key 85d6be7857556d337f4452fe42d506a80103808afb0db2fd4abff6af4149f51b
+poly1305_mac $msg $key
+#the result : a8061dc1305136c6c22b8baf0c0127a9
+```
+
+### 12.3 rc4
+
+**COMMAND:**
+
+```
+rc4_enc key msg
+rc4_dec key msg
+```
+
+**EXAMPLE:**
+
+```
+set key 0102030405
+set msg 0203040506
+rc4_enc $key $msg
+#the result: b03a6700f6
+```

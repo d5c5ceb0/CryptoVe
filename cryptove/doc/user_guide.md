@@ -3,48 +3,107 @@
 >> by Wei Zhang
 >> <d5c5ceb0@gmail.com>
 
-## license
-
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
 ## content
 
-[TOC]
+   * [cryptove User Guide](#cryptove-user-guide)
+      * [1. Introduction](#1-introduction)
+      * [2. Overview](#2-overview)
+      * [3. Cipher](#3-cipher)
+         * [3.1 DES](#31-des)
+            * [3.1.1 ECB](#311-ecb)
+            * [3.1.2 CBC](#312-cbc)
+         * [3.2 DES3](#32-des3)
+            * [3.2.1 ECB](#321-ecb)
+            * [3.2.2 CBC](#322-cbc)
+         * [3.3 AES](#33-aes)
+            * [3.3.1 ECB](#331-ecb)
+            * [3.3.2 CBC](#332-cbc)
+            * [3.3.3 CFB](#333-cfb)
+            * [3.3.4 OFB](#334-ofb)
+            * [3.3.5 CTR](#335-ctr)
+            * [3.3.6 XTS](#336-xts)
+         * [3.4 SM4](#34-sm4)
+            * [3.4.1 ECB](#341-ecb)
+            * [3.4.2 CBC](#342-cbc)
+      * [4. Hash](#4-hash)
+         * [4.1 MD5](#41-md5)
+         * [4.2 SHA1](#42-sha1)
+         * [4.3 SHA224](#43-sha224)
+         * [4.4 SHA256](#44-sha256)
+         * [4.5 SHA384](#45-sha384)
+         * [4.6 SHA512](#46-sha512)
+         * [4.7 SM3](#47-sm3)
+      * [5. MAC](#5-mac)
+         * [5.1 CBC-MAC](#51-cbc-mac)
+            * [5.1.1 CMAC-AES](#511-cmac-aes)
+            * [5.1.2 CBC-MAC-AES](#512-cbc-mac-aes)
+            * [5.1.3 XCBC-MAC-AES](#513-xcbc-mac-aes)
+         * [5.2 HMAC](#52-hmac)
+            * [5.2.1 HMAC-MD5](#521-hmac-md5)
+            * [5.2.2 HMAC-SHA1](#522-hmac-sha1)
+            * [5.2.3 HMAC-SHA224](#523-hmac-sha224)
+            * [5.2.4 HMAC-SHA256](#524-hmac-sha256)
+            * [5.2.5 HMAC-SHA384](#525-hmac-sha384)
+            * [5.2.6 HMAC-SHA512](#526-hmac-sha512)
+      * [6. PK](#6-pk)
+         * [6.1 BIG NUMBER](#61-big-number)
+            * [6.1.1 addition](#611-addition)
+            * [6.1.2 subtraction](#612-subtraction)
+            * [6.1.3 multiplication](#613-multiplication)
+            * [6.1.4 division](#614-division)
+            * [6.1.5 remainder](#615-remainder)
+            * [6.1.6 compare](#616-compare)
+            * [6.1.7 or](#617-or)
+            * [6.1.8 and](#618-and)
+            * [6.1.9 not](#619-not)
+            * [6.1.10 xor (exclusive or)](#6110-xor-exclusive-or)
+            * [6.1.11 shift](#6111-shift)
+            * [6.1.12 modadd (modular addition)](#6112-modadd-modular-addition)
+            * [6.1.13 modsub (modular subtraction)](#6113-modsub-modular-subtraction)
+            * [6.1.14 modmul (modular multiplication)](#6114-modmul-modular-multiplication)
+            * [6.1.15 modinv (modular inverse)](#6115-modinv-modular-inverse)
+            * [6.1.16 modexp (modular exponent)](#6116-modexp-modular-exponent)
+            * [6.1.17 gcd](#6117-gcd)
+            * [6.1.18 genprime](#6118-genprime)
+            * [6.1.19 isprime](#6119-isprime)
+            * [6.1.20 ispoint (is a ecc point)](#6120-ispoint-is-a-ecc-point)
+            * [6.1.21 padd (point addition)](#6121-padd-point-addition)
+            * [6.1.22 pmul (point multiplication)](#6122-pmul-point-multiplication)
+            * [6.1.23 mpmul (multiple point multiplication)](#6123-mpmul-multiple-point-multiplication)
+         * [6.2 RSA](#62-rsa)
+            * [6.2.1 keygen](#621-keygen)
+            * [6.2.2 keygen with p and q](#622-keygen-with-p-and-q)
+            * [6.2.3 encription &amp; verify](#623-encription--verify)
+            * [6.2.4 decryption &amp; sign](#624-decryption--sign)
+            * [6.2.5 crt](#625-crt)
+         * [6.3 SM2](#63-sm2)
+            * [6.3.1 hash z](#631-hash-z)
+            * [6.3.2 hash e](#632-hash-e)
+            * [6.3.3 keygen](#633-keygen)
+            * [6.3.4 sign](#634-sign)
+            * [6.3.5 verify](#635-verify)
+            * [6.3.6 key exchange](#636-key-exchange)
+            * [6.3.7 encryption](#637-encryption)
+            * [6.3.8 decryption](#638-decryption)
+      * [7. random number](#7-random-number)
+      * [8. CRC](#8-crc)
+         * [8.1 crc16](#81-crc16)
+         * [9.1 dec2hex](#91-dec2hex)
+         * [9.2 endian](#92-endian)
+         * [9.3 hex2bin](#93-hex2bin)
+         * [9.4 bin2hex](#94-bin2hex)
+         * [9.5 strsp](#95-strsp)
+         * [9.7 strcat](#97-strcat)
+      * [10 AEAD](#10-aead)
+         * [10.1 aes_ccm (need to update)](#101-aes_ccm-need-to-update)
+      * [11 ECC](#11-ecc)
+         * [ecdsa_sign](#ecdsa_sign)
+         * [ecdsa_verify](#ecdsa_verify)
+      * [12 Stream](#12-stream)
+         * [12.1 chacha20](#121-chacha20)
+         * [12.2 poly1305_mac](#122-poly1305_mac)
+         * [12.3 rc4](#123-rc4)
 
-
-## install
-
-* for linux
-
-    1. download & build MIRACL
-    Download MIRACL repository for "https://github.com/miracl/MIRACL.git",
-    and build it acording miracl/readme.txt
-    example:
-    in linux64, run "bash linux64" and get three files: miracl.a miracl.h mirdef.h.
-
-    2. install tcl8.5-dev
-    For ubuntu, use the command : "sudo apt-get install tcl8.5-dev"
-
-    3. build the extend commands
-    Copy miracl.a miracl.h mirdef.h generated in step 1 to c_extend/,
-    and run make command in a shell. Copy the libcrypto.so to cryptove/lib/.
-
-    4. test & use
-    ./cryptove/test/main_test.tcl for test.
-    run tclsh, and "source cryptove.tcl" for using.
-
-* for windows
-
-    1. use win32 version to build miralc library, and get miracl.lib.
-    2. install active-tcl 8.5 ix86.
-    3. using VC++ to build libcryto.dll, and copy the libcrypto.dll to cryptove/lib/
-    4. run tclsh, and "source cryptove.tcl" for using.
-
-* for mac os
-
-    1. compile config.c to run to generate mirdef.tst and miracl.lst
-    move mirdef.tst to mirdef.h, compile the files in miracl.lst.
-    run "bash macos".
 
 
 ## 1. Introduction
@@ -312,9 +371,9 @@ des3_cbc_done   cbc_ctx
 #result is 15e40b8bf0ab86caac5a6b9178a94ce41836e1b7e7d9bdd54f26a29ac581d0a0
 ```
 
-## 3.3 AES
+### 3.3 AES
 
-### 3.3.1 ECB
+#### 3.3.1 ECB
 
 * Integrated operation:
 
@@ -606,7 +665,7 @@ aes_ctr_done   ctr_ctx
 #the result is 874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff5ae4df3edbd5d35e5b4f09020db03eab1e031dda2fbe03d1792170a0f3009cee
 ```
 
-### 3.3.6 XTS
+#### 3.3.6 XTS
 
 * Integrated operation:
 
@@ -2620,6 +2679,8 @@ for XMODEM, ZMODEM, CRC-16/ACORN
 **COMMAND:**
 ```
 dec2hex dec
+
+dec2hex2 num args_list
 ```
 
 **EXAMPLE:**
@@ -2627,6 +2688,9 @@ dec2hex dec
 ```
 dec2hex 16
 #the result is 10
+
+dec2hex 3 16 17 18
+#the result is 101112
 ```
 
 ### 9.2 endian
@@ -2650,6 +2714,10 @@ endian 00112233445566778899
 
 ```
 Hex2bin str
+
+hex2binfile srcfile dstfile
+
+hexstr2binfile str dstfile
 ```
 
 **EXAMPLE:**
@@ -2665,6 +2733,8 @@ hex2bin 303132333435
 
 ```
 bin2hex str
+
+bin2hexfile srcfile dstfile
 ```
 
 **EXAMPLE:**
@@ -2672,4 +2742,200 @@ bin2hex str
 ```
 bin2hex 012345
 #the result is 303132333435
+```
+
+### 9.5 strsp
+
+**COMMAND:**
+
+```
+strsp str delimiter
+```
+
+**EXAMPLE:**
+
+```
+strsp 01020304 ,
+#the result is 01,02,03,04
+```
+
+### 9.7 strcat
+
+**COMMAND:**
+
+```
+strcat str args
+```
+
+**EXAMPLE:**
+
+```
+strcat 01 02 03 04
+#the result is 01020304
+```
+
+## 10 AEAD
+
+### 10.1 aes_ccm (need to update)
+
+**COMMAND:**
+
+```
+aesccm_enc L M Nonce Msg AAD key
+```
+
+
+|paras     | descrption                                  |
+|----------|---------------------------------------------|
+| L        |
+| M        |
+| Nonce    |
+| Msg      |
+| AAD      |
+| key      |
+
+
+**EXAMPLE:**
+
+```
+set key c0c1c2c3c4c5c6c7c8c9cacbcccdcecf
+set nonce 00000003020100a0a1a2a3a4a5
+set Msg 08090a0b0c0d0e0f101112131415161718191a1b1c1d1e
+set AAD 0001020304050607
+set M 8
+set L 2
+aesccm_enc $L $M $nonce $Msg $AAD $key
+#the result is {588c979a61c663d2f066d0c2c0f989806d5f6b61dac384 17e8d12cfdf926e0}
+```
+
+## 11 ECC
+
+### ecdsa_sign
+
+**COMMAND:**
+
+```
+ecdsa_sign hmode curve privkey msg
+
+```
+
+
+|paras     | descrption                                  |
+|----------|---------------------------------------------|
+|hmode     | support sha1/sha224/sha256/sha384/sha512
+|curve     | support secp192r1/secp192k1/secp224r1/secp224r1/secp256r1/secp256k1/secp384r1/secp521r1
+|privkey   | private key
+|msg       | msg to be signed
+
+**EXAMPLE:**
+
+```
+set msg 0102030405
+set curve secp224k1
+set hmode sha224
+
+
+set keys [ecc_keygen $curve]
+set k [lindex $keys 0]
+set Q [lindex $keys 1]
+
+set sig [ecdsa_sign $hmode $curve $k $msg]
+puts $sig
+set r [lindex $sig 0]
+set s [lindex $sig 1]
+
+puts [ecdsa_verify $hmode $curve $Q ${r}$s $msg]
+```
+
+### ecdsa_verify
+
+**COMMAND:**
+
+```
+ecdsa_verify hmode curve pubkey sig msg
+
+```
+
+
+|paras     | descrption                                  |
+|----------|---------------------------------------------|
+|hmode     | support sha1/sha224/sha256/sha384/sha512
+|curve     | support secp192r1/secp192k1/secp224r1/secp224r1/secp256r1/secp256k1/secp384r1/secp521r1
+|pubkey    | public key
+|sig       | signature
+|msg       | msg to be signed
+
+**EXAMPLE:**
+
+```
+set msg 0102030405
+set curve secp224k1
+set hmode sha224
+
+
+set keys [ecc_keygen $curve]
+set k [lindex $keys 0]
+set Q [lindex $keys 1]
+
+set sig [ecdsa_sign $hmode $curve $k $msg]
+puts $sig
+set r [lindex $sig 0]
+set s [lindex $sig 1]
+
+puts [ecdsa_verify $hmode $curve $Q ${r}$s $msg]
+```
+## 12 Stream
+
+### 12.1 chacha20
+
+
+**COMMAND:**
+
+```
+chacha20_block key counter nonce
+```
+
+**EXAMPLE:**
+
+```
+set key 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+set nonce 000000090000004a00000000
+set counter 00000001
+chacha20_block $key $counter $nonce
+#the result : 10F1E7E4D13B5915500FDD1FA32071C4C7D1F4C733C068030422AA9AC3D46C4ED2826446079FAA0914C2D705D98B02A2B5129CD1DE164EB9CBD083E8A2503C4E
+```
+
+### 12.2 poly1305_mac
+
+**COMMAND:**
+
+```
+poly1305_mac msg key
+```
+
+**EXAMPLE:**
+
+```
+set msg 43727970746f6772617068696320466f72756d2052657365617263682047726f7570
+set key 85d6be7857556d337f4452fe42d506a80103808afb0db2fd4abff6af4149f51b
+poly1305_mac $msg $key
+#the result : a8061dc1305136c6c22b8baf0c0127a9
+```
+
+### 12.3 rc4
+
+**COMMAND:**
+
+```
+rc4_enc key msg
+rc4_dec key msg
+```
+
+**EXAMPLE:**
+
+```
+set key 0102030405
+set msg 0203040506
+rc4_enc $key $msg
+#the result: b03a6700f6
 ```

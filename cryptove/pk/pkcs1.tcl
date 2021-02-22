@@ -263,8 +263,8 @@ proc emsa_pss_encode {hashtype msg salt embits} {
 		default {set cmd sha1_process; set hlen 20}
 	}
 
-	puts "cmd=$cmd"
-	puts "hlen=$hlen"
+	#puts "cmd=$cmd"
+	#puts "hlen=$hlen"
 	set emlen [expr ($embits+7)/8]
 	set leftbits [expr $emlen*8 - $embits]
 	
@@ -302,8 +302,8 @@ proc emsa_pss_decode {hashtype msg em embits} {
 		default {set cmd sha1_process; set hlen 20}
 	}
 
-	puts "cmd=$cmd"
-	puts "hlen=$hlen"
+	#puts "cmd=$cmd"
+	#puts "hlen=$hlen"
 
 	set suffix [string range $em end-1 end]
 	if {[expr 0x$suffix] != 0xbc} {
@@ -320,7 +320,7 @@ proc emsa_pss_decode {hashtype msg em embits} {
 	}
 	set db_mask [mgf1 $hashtype $h [expr $emlen-$hlen-1]] 
 	set db [xor $masked_db $db_mask]
-	puts $db
+	#puts $db
 	set leftbyte [and [string range $db 0 1] [sft R ff $leftbits]]
 	set db2 $leftbyte[string range $db 2 end]
 	set sub_db $db2
@@ -333,13 +333,13 @@ proc emsa_pss_decode {hashtype msg em embits} {
 	}
 	
 	set salt [string range $sub_db 2 end]
-	puts "salt=$salt"
+	#puts "salt=$salt"
 	
 	set msg_hash [$cmd $msg]
 	set m [string repeat 00 8]${msg_hash}${salt}
 	set mhash [$cmd $m]
-	puts "mhash=$mhash"
-	puts "h=$h"
+	#puts "mhash=$mhash"
+	#puts "h=$h"
 	if {[cmp $h $mhash]} {
 		return 05
 	}
@@ -384,7 +384,7 @@ proc emsa_pkcs1_v1_5_encode {hashtype msg emlen} {
 
 	set mhash [$cmd $msg]
 	set T ${Tder}$mhash
-	puts $T
+	#puts $T
 
 	set Tlen [expr [string length $T]/2]
 	if {$emlen < ($Tlen+11)} {
@@ -392,7 +392,7 @@ proc emsa_pkcs1_v1_5_encode {hashtype msg emlen} {
 	}
 	
 	set PS [string repeat FF [expr $emlen - $Tlen - 3]]
-	puts $PS
+	#puts $PS
 
 	set EM 0001${PS}00${T}
 	return $EM
@@ -427,8 +427,18 @@ proc rsa_pkcs1_v15_sig {d n hmode din bitlen} {
 
 proc rsa_pkcs1_v15_ver {e n hmode din sig bitlen} {
     set em [rsa_enc $e $n $sig]
-    set ret [emsa_pkcs1_v1_5_encode $hmode $em [expr $bitlen / 8]]
-    return $ret
+    set em [string repeat 00 [expr $bitlen/8 - [string length $em] / 2]]$em
+    set ret [emsa_pkcs1_v1_5_encode $hmode $din [expr $bitlen / 8]]
+
+    set str1 [string toupper $em]
+    set str2 [string toupper $ret]
+
+    if {$str1 != $str2} {
+        puts $ret
+        puts $em
+        return 01
+    }
+    return 00
 }
 
 proc rsa_pkcs1_pss_sign {d n hmode din salt bitlen} {
@@ -452,7 +462,9 @@ proc rsa_pkcs1_v15_enc { e n din bitlen} {
 proc rsa_pkcs1_v15_dec {d n din bitlen} {
     set mm ""
     set em [rsa_dec $d $n $din]
-    eme_pkcs1_v1_5_decode mm 00$em [expr $bitlen / 8]
+	set em [string repeat 00 [expr $bitlen/8 - [string length $em] / 2]]$em
+    #eme_pkcs1_v1_5_decode mm 00$em [expr $bitlen / 8]
+	eme_pkcs1_v1_5_decode mm $em [expr $bitlen / 8]
     return $mm
 }
 

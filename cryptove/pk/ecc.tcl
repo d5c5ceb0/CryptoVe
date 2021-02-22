@@ -159,7 +159,7 @@ proc ecc_keygen {Curve} {
     set TmpN 0x$ec_n
 
 	set p_len [expr [string length $ec_p]/2]
-	puts p_len=$p_len
+	#puts p_len=$p_len
     #100000次循环后退出，防止死循环。
     for {set i 0} {1} {incr i 1} {
 
@@ -214,9 +214,9 @@ proc ecc_sign {Curve Random Prikey Ehash} {
 	set PByteLen [expr [string length $ec_p]/2]
 	set NByteLen [expr [string length $ec_n]/2]
 	set EByteLen [expr [string length $Ehash]/2]
-	puts plen_$PByteLen
-	puts nlen_$NByteLen
-	puts elen_$EByteLen
+	#puts plen_$PByteLen
+	#puts nlen_$NByteLen
+	#puts elen_$EByteLen
 
 	if {$TmpN < $TmpE} {
 		return -code error {Error: ECDSA Ehash length error}	
@@ -237,8 +237,8 @@ proc ecc_sign {Curve Random Prikey Ehash} {
     #4. 计算椭圆曲线点(x1, y1) =[k]G
     set x1y1 [pmul $Random $Gxy $PAB]
 	set x1 [string range $x1y1 0 [expr $PByteLen*2 - 1]]
-	puts x1y1_$x1y1
-	puts x1_$x1
+	#puts x1y1_$x1y1
+	#puts x1_$x1
     #5. 计算r = x1 mod n, 若r=0 ...
     set r [rem $x1 $ec_n]
     set tmpR 0x$r
@@ -248,7 +248,7 @@ proc ecc_sign {Curve Random Prikey Ehash} {
 
     set rlen [string length $r]
     set r [string repeat 00 [expr $NByteLen -$rlen/2]]$r
-	puts r_$r
+	#puts r_$r
 	
     #A6. 计算s=k^-1 * (ehash+r*dA) mod n 
 	set rdA [modmul $r $Prikey $ec_n]
@@ -257,7 +257,7 @@ proc ecc_sign {Curve Random Prikey Ehash} {
 	set s [modmul $k_inv $e_rdA $ec_n]
     set slen [string length $s]
     set s [string repeat 00 [expr $NByteLen-$slen/2]]$s
-	puts s_$s
+	#puts s_$s
     
     return [list ${r} ${s}]
 }
@@ -278,9 +278,9 @@ proc ecc_verify {Curve Pubkey RS Ehash} {
 	set NByteLen [expr [string length $ec_n]/2]
 	set EByteLen [expr [string length $Ehash]/2]
 	set SByteLen [expr [string length $RS]/2]
-	puts plen_$PByteLen
-	puts nlen_$NByteLen
-	puts elen_$EByteLen
+	#puts plen_$PByteLen
+	#puts nlen_$NByteLen
+	#puts elen_$EByteLen
 
     set TmpN 0x$ec_n
 	set TmpE 0x$Ehash
@@ -289,15 +289,15 @@ proc ecc_verify {Curve Pubkey RS Ehash} {
 		return -code error {Error: ECDSA Ehash length error}	
 	}
 
-	puts $Ehash
+	#puts $Ehash
 	#if {$EByteLen < $NByteLen} {
 		set temp_e [string repeat 00 [expr $NByteLen - $EByteLen]]$Ehash
 	#} 
 
     set R [string range $RS 0 [expr $SByteLen/2*2-1]]
     set S [string range $RS [expr $SByteLen/2*2] end]
-	puts r_$R
-	puts s_$S
+	#puts r_$R
+	#puts s_$S
 
     set TmpR 0x$R
     set TmpS 0x$S

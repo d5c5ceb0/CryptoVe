@@ -463,7 +463,7 @@ proc cfb_update {args_list} {
 	
 	#check length of the messages
   if {$mlen % ($block_len*2)} {
-	  puts $messages
+	  #puts $messages
       return -code error [ret_code cfb_update ERR_ARGS "messages wrong!"]
   }
 
@@ -615,7 +615,7 @@ proc ofb_update {args_list} {
 	
 	#check length of the messages
   if {$mlen % ($block_len*2)} {
-	  puts $messages
+	  #puts $messages
       return -code error [ret_code cfb_update ERR_ARGS "messages wrong!"]
   }
 
@@ -1610,14 +1610,14 @@ proc aesccm_enc {L M Nonce Msg AAD key} {
     set Lens [expr 15 - [string length $Nonce]/2]
     set MsgLen [Len $Msg]
     set b0 ${LL}${Nonce}[string repeat 00 [expr $Lens - [string length $MsgLen]/2]]$MsgLen
-    puts $b0
+    #puts $b0
 
     set aadLen [expr [string length $AAD] / 2]
     set aadl [Len $AAD]
     #TODO b1 size is not away 2
     set b1 [string repeat 00 [expr 2 - [string length $aadl]/2]]${aadl}${AAD}
     set b1 $b1[string repeat 00 [expr 16 - [string length $b1]/2%16]]
-    puts $b1
+    #puts $b1
     set xxx [expr [string length $Msg]/2%16]
     if {$xxx != 0} {
         set b2 $Msg[string repeat 00 [expr 16 - $xxx]]
@@ -1626,12 +1626,12 @@ proc aesccm_enc {L M Nonce Msg AAD key} {
     }
 
     set c1 [aes_cbcmac_process $key ${b0}${b1}${b2}]
-    puts $b0$b1$b2
-    puts c1_$c1
+    #puts $b0$b1$b2
+    #puts c1_$c1
 
     set Lens [expr 15 - [string length $Nonce]/2]
     set iv [dec2hex [expr $L - 1]]${Nonce}[string repeat 00 [expr $Lens]]
-    puts $iv
+    #puts $iv
     set s0 [aes_ecb_process enc $key $iv]
     set tag [string range [xor $s0 $c1] 0 [expr $M * 2 - 1]]
     set iv [add $iv 01]

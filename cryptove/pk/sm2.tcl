@@ -310,7 +310,7 @@ proc sm2_sig {Random Prikey Ehash} {
 
     #A6. 计算s=(1+dA)^-1 * (k-r*dA) mod n 
     set inv_1_add_da [modinv [modadd $Prikey 01 $sm2_n] $sm2_n]
-    puts inv_$inv_1_add_da
+    #puts inv_$inv_1_add_da
     set mul_r_da [modmul $r $Prikey $sm2_n]
     set sub_k_mulrda [modsub $Random $mul_r_da $sm2_n]
 

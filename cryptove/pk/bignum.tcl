@@ -70,7 +70,7 @@ proc a2j {x y} {
 	return [list $x $y 1]
 }
 
-proc j2a {x y z $ecc_p} {
+proc j2a {x y z ecc_p} {
     set r 01
 
 	set zinv [modinv $z $ecc_p]
@@ -159,6 +159,37 @@ proc padd_j_mont {x1 y1 z1 x2 y2 z2 ecc_p ecc_a modsize} {
 	set z3    [modmul_mont $h [modmul_mont $z1 $z2 $ecc_p $modsize] $ecc_p $modsize]
 
 	return [list $x3 $y3 $z3]
+}
+
+
+proc miller_rabin {prime a} {
+	set r [sub $prime 01]
+	set t $r
+	set s 0
+	while {[and $r 01] == 0} {
+		set r [sft R $r 1]
+		incr s 1
+	}
+
+	set y [modexp $a $r $prime]
+	if {([expr 0x$y] == 0x01)||([expr 0x$y] == [expr 0x$t])} {
+		return 0
+	}
+
+	set j 1
+	while {[expr 0x$y] != [expr 0x$t]} {
+		if {$j == $s} {
+			return 1
+		}
+		set y [modmul $y $y $prime]
+		if {[expr 0x$y] == 0x01} {
+			return 1
+		}
+
+		incr j 1
+	}
+
+	return 0
 }
 
 puts "load bignum successfully!"

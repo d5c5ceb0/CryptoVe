@@ -10,6 +10,7 @@ load [file join [file dirname [info script]] lib/libcrypto[info sharedlibextensi
 source [file join [file dirname [info script]] cipher/cipher_api.tcl]
 source [file join [file dirname [info script]] hash/hash_api.tcl]
 source [file join [file dirname [info script]] mac/hmac_api.tcl]
+source [file join [file dirname [info script]] kdf/hkdf.tcl]
 source [file join [file dirname [info script]] mac/cbc_mac.tcl]
 source [file join [file dirname [info script]] crc/crc16.tcl]
 source [file join [file dirname [info script]] rng/rng.tcl]

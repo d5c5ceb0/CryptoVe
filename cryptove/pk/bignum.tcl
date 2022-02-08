@@ -106,7 +106,7 @@ proc pdbl_j_mont {x y z ecc_p ecc_a modsize} {
 
 	set y2 [modmul_mont $y $y $ecc_p $modsize]
 	set y4 [modmul_mont $y2 $y2 $ecc_p $modsize]
-	set s  [modmul_mont [modmul_mont [to_mont_domain 04] $x $ecc_p $modsize] $y2 $ecc_p $modsize]
+	set s  [modmul_mont [modmul_mont [to_mont_domain 04 $ecc_p $modsize] $x $ecc_p $modsize] $y2 $ecc_p $modsize]
 
 	set x2 [modmul_mont $x $x $ecc_p $modsize]
 	set x2_3 [modmul_mont [to_mont_domain 03 $ecc_p $modsize] $x2 $ecc_p $modsize]
@@ -122,6 +122,22 @@ proc pdbl_j_mont {x y z ecc_p ecc_a modsize} {
 	#j2a_mont $x1 $y1 $z1
 	return [list $x1 $y1 $z1]
 }
+
+proc pdbl_j {x y z ecc_p ecc_a modsize} {
+
+	set x1 [to_mont_domain $x $ecc_p $modsize]
+	set y1 [to_mont_domain $y $ecc_p $modsize]
+	set z1 [to_mont_domain $z $ecc_p $modsize]
+
+	set ret [pdbl_j_mont $x1 $y1 $z1 $ecc_p $ecc_a $modsize]
+
+	set x2 [from_mont_domain [lindex $ret 0] $ecc_p $modsize]
+	set y2 [from_mont_domain [lindex $ret 1] $ecc_p $modsize]
+	set z2 [from_mont_domain [lindex $ret 2] $ecc_p $modsize]
+
+	return [list $x2 $y2 $z2]
+}
+
 
 proc padd_j_mont {x1 y1 z1 x2 y2 z2 ecc_p ecc_a modsize} {
 	set z2_2 [modmul_mont $z2 $z2 $ecc_p $modsize]
@@ -157,6 +173,24 @@ proc padd_j_mont {x1 y1 z1 x2 y2 z2 ecc_p ecc_a modsize} {
 	set y3    [modsub_mont $y3 [modmul_mont $s1 $h_3 $ecc_p $modsize] $ecc_p]
 
 	set z3    [modmul_mont $h [modmul_mont $z1 $z2 $ecc_p $modsize] $ecc_p $modsize]
+
+	return [list $x3 $y3 $z3]
+}
+
+proc padd_j {x1 y1 z1 x2 y2 z2 ecc_p ecc_a modsize} {
+
+	set x11 [to_mont_domain $x1 $ecc_p $modsize]
+	set y11 [to_mont_domain $y1 $ecc_p $modsize]
+	set z11 [to_mont_domain $z1 $ecc_p $modsize]
+	set x22 [to_mont_domain $x2 $ecc_p $modsize]
+	set y22 [to_mont_domain $y2 $ecc_p $modsize]
+	set z22 [to_mont_domain $z2 $ecc_p $modsize]
+
+	set ret [padd_j_mont $x11 $y11 $z11 $x22 $y22 $z22 $ecc_p $ecc_a $modsize]
+
+	set x3 [from_mont_domain [lindex $ret 0] $ecc_p $modsize]
+	set y3 [from_mont_domain [lindex $ret 1] $ecc_p $modsize]
+	set z3 [from_mont_domain [lindex $ret 2] $ecc_p $modsize]
 
 	return [list $x3 $y3 $z3]
 }

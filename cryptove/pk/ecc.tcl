@@ -440,3 +440,61 @@ proc ecdsa_verify {hmode curve Q sig msg} {
     return $dout
 }
 
+proc ecc_pmul {curve k p} {
+	global ecc_curve_list
+	set ec_p  [dict get [dict get $ecc_curve_list $Curve] ecc_p]
+	set ec_a  [dict get [dict get $ecc_curve_list $Curve] ecc_a]
+	set ec_b  [dict get [dict get $ecc_curve_list $Curve] ecc_b]
+	set ec_n  [dict get [dict get $ecc_curve_list $Curve] ecc_n]
+	set ec_gx [dict get [dict get $ecc_curve_list $Curve] ecc_gx]
+	set ec_gy [dict get [dict get $ecc_curve_list $Curve] ecc_gy]
+
+	set PAB ${ecc_p}${ecc_a}${ecc_b}
+
+	return [pmul $k $p $PAB]
+}
+
+proc ecc_padd {curve p1 p2} {
+	global ecc_curve_list
+	set ec_p  [dict get [dict get $ecc_curve_list $Curve] ecc_p]
+	set ec_a  [dict get [dict get $ecc_curve_list $Curve] ecc_a]
+	set ec_b  [dict get [dict get $ecc_curve_list $Curve] ecc_b]
+	set ec_n  [dict get [dict get $ecc_curve_list $Curve] ecc_n]
+	set ec_gx [dict get [dict get $ecc_curve_list $Curve] ecc_gx]
+	set ec_gy [dict get [dict get $ecc_curve_list $Curve] ecc_gy]
+
+	set PAB ${ecc_p}${ecc_a}${ecc_b}
+
+	return [padd $p1 $p2 $PAB]
+}
+
+proc ecc_pdbl {curve p} {
+	global ecc_curve_list
+	set ec_p  [dict get [dict get $ecc_curve_list $Curve] ecc_p]
+	set ec_a  [dict get [dict get $ecc_curve_list $Curve] ecc_a]
+	set ec_b  [dict get [dict get $ecc_curve_list $Curve] ecc_b]
+	set ec_n  [dict get [dict get $ecc_curve_list $Curve] ecc_n]
+	set ec_gx [dict get [dict get $ecc_curve_list $Curve] ecc_gx]
+	set ec_gy [dict get [dict get $ecc_curve_list $Curve] ecc_gy]
+
+	set PAB ${ecc_p}${ecc_a}${ecc_b}
+
+	return [padd $p $p $PAB]
+}
+
+
+proc ecc_isp {curve p} {
+	global ecc_curve_list
+	set ec_p  [dict get [dict get $ecc_curve_list $Curve] ecc_p]
+	set ec_a  [dict get [dict get $ecc_curve_list $Curve] ecc_a]
+	set ec_b  [dict get [dict get $ecc_curve_list $Curve] ecc_b]
+	set ec_n  [dict get [dict get $ecc_curve_list $Curve] ecc_n]
+	set ec_gx [dict get [dict get $ecc_curve_list $Curve] ecc_gx]
+	set ec_gy [dict get [dict get $ecc_curve_list $Curve] ecc_gy]
+
+	set PAB ${ecc_p}${ecc_a}${ecc_b}
+
+	return [ispoint $p $PAB]
+}
+
+

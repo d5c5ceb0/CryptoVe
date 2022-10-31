@@ -16,8 +16,11 @@
 package provide crypto 1.0.0
 
 
-#Ê®½øÖÆ×ªÊ®Áù½øÖÆ
+#åè¿›åˆ¶è½¬åå…­è¿›åˆ¶
 proc dec2hex {dec} {
+	if {$dec == 0} {
+		return 00
+	}
 	set ret ""
 	while {$dec} {
 		set ret [format %x [expr $dec % 16]]$ret
@@ -40,7 +43,7 @@ proc dec2hex2 {num args} {
 	puts $y
 }
 
-#´óĞ¡¶Ë×ª»»
+#å¤§å°ç«¯è½¬æ¢
 proc endian {str} {
     
     set strlen [string length $str]
@@ -57,7 +60,7 @@ proc endian {str} {
 }
 
 
-#×Ö·û´®
+#å­—ç¬¦ä¸²
 #hex to bin
 proc hex2bin {str} {
 
@@ -75,7 +78,7 @@ proc hex2bin {str} {
     return $ret
 }
 
-#ÎÄ¼ş
+#æ–‡ä»¶
 #hex to bin
 proc hex2binfile {srcfile dstfile} {
 
@@ -116,7 +119,7 @@ proc bin2hexfile {srcfile dstfile} {
     close $sfn
     close $dfn
 }
-#×Ö·û´®±È½Ï
+#å­—ç¬¦ä¸²æ¯”è¾ƒ
 proc Compare {str1 str2} {
 
     set str1 [string toupper $str1]

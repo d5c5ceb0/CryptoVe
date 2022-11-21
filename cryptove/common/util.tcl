@@ -18,6 +18,10 @@ package provide crypto 1.0.0
 
 #十进制转十六进制
 proc dec2hex {dec} {
+    if {$dec == 0} {
+        return 00
+    }
+
 	set ret ""
 	while {$dec} {
 		set ret [format %x [expr $dec % 16]]$ret
